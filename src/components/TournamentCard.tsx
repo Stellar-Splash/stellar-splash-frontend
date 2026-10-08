@@ -1,5 +1,5 @@
 import React from 'react';
-import { Users, Coins, ExternalLink, Play, Lock, BarChart2 } from 'lucide-react';
+import { Users, Coins, ExternalLink, Play, Lock, BarChart2, ShieldCheck, Trophy } from 'lucide-react';
 import { TournamentItem } from '../services/api';
 
 interface TournamentCardProps {
@@ -8,6 +8,8 @@ interface TournamentCardProps {
   onFund: (t: TournamentItem) => void;
   onLeaderboard: (t: TournamentItem) => void;
   onFinancials: (t: TournamentItem) => void;
+  onAgreement?: (t: TournamentItem) => void;
+  onRankings?: (t: TournamentItem) => void;
 }
 
 export const TournamentCard: React.FC<TournamentCardProps> = ({
@@ -16,6 +18,8 @@ export const TournamentCard: React.FC<TournamentCardProps> = ({
   onFund,
   onLeaderboard,
   onFinancials,
+  onAgreement,
+  onRankings,
 }) => {
   const getBadgeClass = (state: string) => {
     switch (state) {
@@ -122,7 +126,23 @@ export const TournamentCard: React.FC<TournamentCardProps> = ({
           </button>
         )}
 
-        <button className="btn-secondary" onClick={() => onLeaderboard(tournament)} title="Leaderboard">
+        <button
+          className="btn-secondary"
+          onClick={() => onAgreement && onAgreement(tournament)}
+          title="Prize Agreement & Financial Rules"
+        >
+          <ShieldCheck size={16} />
+        </button>
+
+        <button
+          className="btn-secondary"
+          onClick={() => onRankings && onRankings(tournament)}
+          title="Verified Tournament Standings"
+        >
+          <Trophy size={16} />
+        </button>
+
+        <button className="btn-secondary" onClick={() => onLeaderboard(tournament)} title="Live Leaderboard">
           <BarChart2 size={16} />
         </button>
 

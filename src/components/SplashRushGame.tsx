@@ -41,12 +41,14 @@ interface SplashRushProps {
   tournamentId: string;
   playerWallet: string;
   onFinish?: () => void;
+  onInspectVerification?: (matchId: string, score: number) => void;
 }
 
 export const SplashRushGame: React.FC<SplashRushProps> = ({
   tournamentId,
   playerWallet,
   onFinish,
+  onInspectVerification,
 }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [gameState, setGameState] = useState<GameState>('READY');
@@ -692,6 +694,19 @@ export const SplashRushGame: React.FC<SplashRushProps> = ({
               <button className="btn-primary" onClick={handleStartGame}>
                 <RotateCcw size={16} /> Play Again
               </button>
+              {onInspectVerification && (
+                <button
+                  className="btn-secondary"
+                  onClick={() =>
+                    onInspectVerification(
+                      verifiedResult.matchId || session?.matchId || 'match-genesis-001',
+                      verifiedResult.finalScore
+                    )
+                  }
+                >
+                  <ShieldCheck size={16} /> Inspect Verification & Attestation
+                </button>
+              )}
             </div>
           </div>
         )}

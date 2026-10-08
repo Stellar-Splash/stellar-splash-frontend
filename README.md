@@ -34,10 +34,21 @@ Stellar Splash is a skill-based gaming platform where creators fund tournament p
    - Executes real payment operations to tournament vault addresses on Stellar Testnet.
    - Requires independent transaction verification from backend before tournament opens.
    - Direct links to Stellar Expert Explorer (`https://stellar.expert/explorer/testnet/tx/...`).
-5. **Live Tournament Leaderboard**:
-   - Real-time player standings.
-   - Explicit distinction between **Current Score** and **Final Verified Result**.
-6. **On-Chain Financial Dashboard**:
+5. **Independent Match Verification & Attestation Suite**:
+   - Inspects deterministic replay of event logs against the canonical game version rules.
+   - Compares client-submitted scores vs independently replayed scores.
+   - Interactive simulation mode to demonstrate automatic rejection of tampered/forged client scores.
+   - Displays canonical SHA-256 result hash and signed cryptographic attestations from authorized verifiers.
+6. **Tournament Prize Agreement Governance**:
+   - Displays structured material financial terms: Prize Asset, Prize Pool Amount, Basis Point Allocations (10,000 bps invariant), Integer Floor Rounding, and Dust Residual assigned to Rank 1.
+   - Supports Creator wallet approval and permanent agreement locking (`LOCKED`).
+   - Immutability guarantee: locked agreements cannot be mutated; new versions increment cleanly (`v1`, `v2`) with superseding.
+7. **Verified Tournament Standings & Canonical Ranking Hash**:
+   - Calculates standings deterministically using only verified match results.
+   - Enforces 3-tier tie-breaker rules: Primary (Score), Secondary (Accuracy), Tertiary (Completion Timestamp).
+   - Generates and locks canonical 32-byte ranking hash for future settlement ingestion.
+8. **Live Tournament Leaderboard & Financial Dashboard**:
+   - Real-time player standings with explicit distinction between **Current Score** and **Final Verified Result**.
    - Inspects prize pool amounts, assets, funding confirmation status, transaction hashes, and reconciliation status (`RECONCILED`).
 
 ---

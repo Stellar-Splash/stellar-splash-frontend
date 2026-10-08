@@ -7,6 +7,9 @@ import { CreateTournamentModal } from './components/CreateTournamentModal';
 import { PrizePoolFundingModal } from './components/PrizePoolFundingModal';
 import { LeaderboardModal } from './components/LeaderboardModal';
 import { FinancialDashboardModal } from './components/FinancialDashboardModal';
+import { VerificationModal } from './components/VerificationModal';
+import { PrizeAgreementModal } from './components/PrizeAgreementModal';
+import { TournamentRankingsModal } from './components/TournamentRankingsModal';
 import { HowItWorks } from './components/HowItWorks';
 import { ApiClient, TournamentItem } from './services/api';
 import { StellarWalletService, WalletState } from './services/stellar-wallet';
@@ -23,6 +26,10 @@ export const App: React.FC = () => {
   const [showFundingModal, setShowFundingModal] = useState<boolean>(false);
   const [showLeaderboardModal, setShowLeaderboardModal] = useState<boolean>(false);
   const [showFinancialModal, setShowFinancialModal] = useState<boolean>(false);
+  const [showAgreementModal, setShowAgreementModal] = useState<boolean>(false);
+  const [showRankingsModal, setShowRankingsModal] = useState<boolean>(false);
+  const [showVerificationModal, setShowVerificationModal] = useState<boolean>(false);
+  const [verificationMatchContext, setVerificationMatchContext] = useState<{ matchId: string; score: number } | null>(null);
   const [showGameView, setShowGameView] = useState<boolean>(false);
 
   // Load initial tournaments
@@ -83,6 +90,21 @@ export const App: React.FC = () => {
     setShowFinancialModal(true);
   };
 
+  const handleAgreement = (t: TournamentItem) => {
+    setSelectedTournament(t);
+    setShowAgreementModal(true);
+  };
+
+  const handleRankings = (t: TournamentItem) => {
+    setSelectedTournament(t);
+    setShowRankingsModal(true);
+  };
+
+  const handleInspectVerification = (matchId: string, score: number) => {
+    setVerificationMatchContext({ matchId, score });
+    setShowVerificationModal(true);
+  };
+
   const handleTournamentCreated = (t: TournamentItem) => {
     setTournaments((prev) => [t, ...prev]);
     // Immediately prompt to fund the created tournament
@@ -139,6 +161,8 @@ export const App: React.FC = () => {
                 onFund={handleFundTournament}
                 onLeaderboard={handleLeaderboard}
                 onFinancials={handleFinancials}
+                onAgreement={handleAgreement}
+                onRankings={handleRankings}
                 onCreateClick={() => setShowCreateModal(true)}
               />
             </div>
@@ -166,6 +190,7 @@ export const App: React.FC = () => {
                 'GA2C5RFPE6GCKMY3US5PAB6UZLKIGAHWKXX2GAKVOOUMVQHGASVMOROB'
               }
               onFinish={loadTournaments}
+              onInspectVerification={handleInspectVerification}
             />
           </div>
         )}
@@ -199,6 +224,33 @@ export const App: React.FC = () => {
         tournament={selectedTournament}
         isOpen={showFinancialModal}
         onClose={() => setShowFinancialModal(false)}
+      />
+
+      <PrizeAgreementModal
+        tournamentId={selectedTournament?.id}
+        tournamentName={selectedTournament?.name}
+        creatorWallet={selectedTournament?.creatorWallet}
+        prizePoolAmount={selectedTournament?.prizePoolAmount}
+        prizeAsset={selectedTournament?.prizeAsset}
+        isOpen={showAgreementModal}
+        onClose={() => setShowAgreementModal(false)}
+      />
+
+      <TournamentRankingsModal
+        tournamentId={selectedTournament?.id}
+        tournamentName={selectedTournament?.name}
+        creatorWallet={selectedTournament?.creatorWallet}
+        isOpen={showRankingsModal}
+        onClose={() => setShowRankingsModal(false)}
+      />
+
+      <VerificationModal
+        matchId={verificationMatchContext?.matchId}
+        tournamentId={selectedTournament?.id}
+        playerWallet={wallet.publicKey || 'GCKAZD66N6E64B44J7K3XW6P2W3V7QOXWCV7T4KQL3ZPL2GB6V2A73VU'}
+        initialScore={verificationMatchContext?.score}
+        isOpen={showVerificationModal}
+        onClose={() => setShowVerificationModal(false)}
       />
 
       {/* Footer */}
