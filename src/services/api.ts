@@ -125,6 +125,138 @@ export interface PrizeAgreement {
   lockedAt?: number;
 }
 
+export type SettlementStatus =
+  | 'CREATED'
+  | 'VALIDATING'
+  | 'CALCULATING'
+  | 'READY'
+  | 'AUTHORIZED'
+  | 'SUBMITTING'
+  | 'CONFIRMING'
+  | 'SETTLED'
+  | 'RECONCILED'
+  | 'PARTIALLY_SETTLED'
+  | 'FAILED'
+  | 'REQUIRES_RECONCILIATION'
+  | 'CANCELLED';
+
+export interface SettlementRecipient {
+  rank: number;
+  playerWallet: string;
+  allocationBps: number;
+  amount: number;
+  amountBaseUnits: number;
+  isResidualRecipient: boolean;
+  txHash?: string;
+  ledger?: number;
+  status: 'PENDING' | 'SUBMITTED' | 'CONFIRMED' | 'FAILED';
+  confirmedAt?: number;
+  failureReason?: string;
+}
+
+export interface SettlementSnapshot {
+  settlementId: string;
+  tournamentId: string;
+  agreementId: string;
+  agreementVersion: number;
+  agreementHash: string;
+  rankingId: string;
+  rankingVersion: number;
+  rankingHash: string;
+  prizePoolAmount: number;
+  prizeAsset: string;
+  allocationRules: AllocationRule[];
+  roundingRule: string;
+  residualRule: string;
+  tieRule: string;
+  recipients: SettlementRecipient[];
+  grossPrizePool: number;
+  totalAllocated: number;
+  residualAmount: number;
+  createdAt: number;
+}
+
+export interface SettlementRecord {
+  settlementId: string;
+  tournamentId: string;
+  agreementId: string;
+  agreementVersion: number;
+  agreementHash: string;
+  rankingVersion: number;
+  rankingHash: string;
+  prizePoolAmount: number;
+  prizeAsset: string;
+  settlementHash: string;
+  status: SettlementStatus;
+  recipients: SettlementRecipient[];
+  grossPrizePool: number;
+  totalAllocated: number;
+  residualAmount: number;
+  snapshot: SettlementSnapshot;
+  authorizedBy?: string;
+  authorizedAt?: number;
+  executedAt?: number;
+  completedAt?: number;
+  reconciledAt?: number;
+  stellarTxHash?: string;
+  stellarLedger?: number;
+  explorerUrl?: string;
+  failureReason?: string;
+  createdAt: number;
+  updatedAt: number;
+}
+
+export interface SettlementEligibilityResult {
+  eligible: boolean;
+  tournamentId: string;
+  reasons: string[];
+  agreement?: PrizeAgreement;
+  ranking?: FinalRankingRecord;
+}
+
+export interface SettlementTransactionRecord {
+  id: string;
+  settlementId: string;
+  tournamentId: string;
+  recipientRank: number;
+  recipientWallet: string;
+  asset: string;
+  amount: number;
+  amountBaseUnits: number;
+  expectedAmount: number;
+  actualAmount: number;
+  txHash: string;
+  ledger?: number;
+  status: 'PENDING' | 'SUBMITTED' | 'CONFIRMED' | 'FAILED' | 'RECONCILIATION_REQUIRED';
+  submittedAt: number;
+  confirmedAt?: number;
+  failureCode?: string;
+  failureReason?: string;
+  explorerUrl: string;
+}
+
+export interface SettlementReconciliationRecord {
+  reconciliationId: string;
+  settlementId: string;
+  tournamentId: string;
+  expectedTotal: number;
+  observedTotal: number;
+  expectedRecipientCount: number;
+  observedRecipientCount: number;
+  matchedTransactions: number;
+  mismatchedTransactions: number;
+  status: 'RECONCILED' | 'MISMATCH' | 'REQUIRES_REVIEW' | 'PENDING';
+  details: string;
+  checkedAt: number;
+  discrepancies: string[];
+}
+
+export interface PlayerPayoutItem {
+  settlement: SettlementRecord;
+  recipient: SettlementRecipient;
+  tournament: TournamentItem;
+}
+
 const API_BASE = '/api';
 
 export class ApiClient {
@@ -473,6 +605,113 @@ export class ApiClient {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ actorWallet }),
       });
+      return await res.json();
+    } catch (err) {
+      return { success: false, error: String(err) };
+    }
+  }
+
+  // --- Settlements & Payouts ---
+  public static async getSettlementEligibility(
+    tournamentId: string
+  ): Promise<{ success: boolean; eligibility?: SettlementEligibilityResult; error?: string }> {
+    try {
+      const res = await fetch(`${API_BASE}/settlements/${tournamentId}/eligibility`);
+      return await res.json();
+    } catch (err) {
+      return { success: false, error: String(err) };
+    }
+  }
+
+  public static async getSettlementPreview(
+    tournamentId: string
+  ): Promise<{
+    success: boolean;
+    settlement?: SettlementRecord;
+    snapshot?: SettlementSnapshot;
+    isExisting?: boolean;
+    error?: string;
+  }> {
+    try {
+      const res = await fetch(`${API_BASE}/settlements/${tournamentId}/preview`);
+      return await res.json();
+    } catch (err) {
+      return { success: false, error: String(err) };
+    }
+  }
+
+  public static async authorizeSettlement(
+    tournamentId: string,
+    authorizedBy: string
+  ): Promise<{ success: boolean; settlement?: SettlementRecord; error?: string }> {
+    try {
+      const res = await fetch(`${API_BASE}/settlements/${tournamentId}/authorize`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ authorizedBy }),
+      });
+      return await res.json();
+    } catch (err) {
+      return { success: false, error: String(err) };
+    }
+  }
+
+  public static async executeSettlement(
+    tournamentId: string,
+    vaultSecretKey?: string
+  ): Promise<{
+    success: boolean;
+    settlement?: SettlementRecord;
+    transactions?: SettlementTransactionRecord[];
+    error?: string;
+  }> {
+    try {
+      const res = await fetch(`${API_BASE}/settlements/${tournamentId}/execute`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ vaultSecretKey }),
+      });
+      return await res.json();
+    } catch (err) {
+      return { success: false, error: String(err) };
+    }
+  }
+
+  public static async getSettlement(
+    tournamentId: string
+  ): Promise<{
+    success: boolean;
+    settlement?: SettlementRecord;
+    transactions?: SettlementTransactionRecord[];
+    reconciliation?: SettlementReconciliationRecord;
+    error?: string;
+  }> {
+    try {
+      const res = await fetch(`${API_BASE}/settlements/${tournamentId}`);
+      return await res.json();
+    } catch (err) {
+      return { success: false, error: String(err) };
+    }
+  }
+
+  public static async reconcileSettlement(
+    settlementId: string
+  ): Promise<{ success: boolean; reconciliation?: SettlementReconciliationRecord; error?: string }> {
+    try {
+      const res = await fetch(`${API_BASE}/settlements/${settlementId}/reconcile`, {
+        method: 'POST',
+      });
+      return await res.json();
+    } catch (err) {
+      return { success: false, error: String(err) };
+    }
+  }
+
+  public static async getPlayerPayouts(
+    playerWallet: string
+  ): Promise<{ success: boolean; count?: number; payouts?: PlayerPayoutItem[]; error?: string }> {
+    try {
+      const res = await fetch(`${API_BASE}/settlements/player/${playerWallet}`);
       return await res.json();
     } catch (err) {
       return { success: false, error: String(err) };

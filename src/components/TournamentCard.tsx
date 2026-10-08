@@ -1,5 +1,5 @@
 import React from 'react';
-import { Users, Coins, ExternalLink, Play, Lock, BarChart2, ShieldCheck, Trophy } from 'lucide-react';
+import { Users, Coins, ExternalLink, Play, Lock, BarChart2, ShieldCheck, Trophy, CheckCircle } from 'lucide-react';
 import { TournamentItem } from '../services/api';
 
 interface TournamentCardProps {
@@ -10,6 +10,7 @@ interface TournamentCardProps {
   onFinancials: (t: TournamentItem) => void;
   onAgreement?: (t: TournamentItem) => void;
   onRankings?: (t: TournamentItem) => void;
+  onSettle?: (t: TournamentItem) => void;
 }
 
 export const TournamentCard: React.FC<TournamentCardProps> = ({
@@ -20,6 +21,7 @@ export const TournamentCard: React.FC<TournamentCardProps> = ({
   onFinancials,
   onAgreement,
   onRankings,
+  onSettle,
 }) => {
   const getBadgeClass = (state: string) => {
     switch (state) {
@@ -148,6 +150,15 @@ export const TournamentCard: React.FC<TournamentCardProps> = ({
 
         <button className="btn-secondary" onClick={() => onFinancials(tournament)} title="On-chain Vault Financials">
           <ExternalLink size={16} />
+        </button>
+
+        <button
+          className="btn-secondary"
+          onClick={() => onSettle && onSettle(tournament)}
+          title="Deterministic Prize Settlement & Payouts"
+          style={{ borderColor: 'rgba(6, 182, 212, 0.4)', color: '#06b6d4' }}
+        >
+          <CheckCircle size={16} />
         </button>
       </div>
     </div>

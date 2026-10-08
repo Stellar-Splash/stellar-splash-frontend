@@ -47,7 +47,14 @@ Stellar Splash is a skill-based gaming platform where creators fund tournament p
    - Calculates standings deterministically using only verified match results.
    - Enforces 3-tier tie-breaker rules: Primary (Score), Secondary (Accuracy), Tertiary (Completion Timestamp).
    - Generates and locks canonical 32-byte ranking hash for future settlement ingestion.
-8. **Live Tournament Leaderboard & Financial Dashboard**:
+8. **Deterministic Prize Settlement & Multi-Recipient Payout**:
+   - Evaluates strict multi-step eligibility pipeline before executing any settlement.
+   - Previews deterministic basis-point allocations (10,000 bps invariant) and residual dust handling awarded to Rank 1.
+   - Binds settlement authorization cryptographically to the locked prize agreement and finalized ranking hashes.
+   - Submits multi-recipient Stellar Testnet transfers and generates individual transaction hashes with explorer links.
+   - Permanent verifiable settlement receipts and independent on-chain reconciliation verification.
+9. **Player Payout History & Live Tournament Leaderboard**:
+   - Dedicated "My Payouts" personal dashboard tracking verified tournament winnings and explorer proofs.
    - Real-time player standings with explicit distinction between **Current Score** and **Final Verified Result**.
    - Inspects prize pool amounts, assets, funding confirmation status, transaction hashes, and reconciliation status (`RECONCILED`).
 

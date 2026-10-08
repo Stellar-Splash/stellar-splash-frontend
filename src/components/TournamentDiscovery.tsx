@@ -13,6 +13,7 @@ interface TournamentDiscoveryProps {
   onFinancials: (t: TournamentItem) => void;
   onAgreement?: (t: TournamentItem) => void;
   onRankings?: (t: TournamentItem) => void;
+  onSettle?: (t: TournamentItem) => void;
   onCreateClick: () => void;
 }
 
@@ -26,6 +27,7 @@ export const TournamentDiscovery: React.FC<TournamentDiscoveryProps> = ({
   onFinancials,
   onAgreement,
   onRankings,
+  onSettle,
   onCreateClick,
 }) => {
   const [search, setSearch] = useState('');
@@ -150,6 +152,7 @@ export const TournamentDiscovery: React.FC<TournamentDiscoveryProps> = ({
             onFinancials={onFinancials}
             onAgreement={onAgreement}
             onRankings={onRankings}
+            onSettle={onSettle}
           />
         ))}
       </div>

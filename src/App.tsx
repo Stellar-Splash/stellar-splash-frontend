@@ -10,6 +10,8 @@ import { FinancialDashboardModal } from './components/FinancialDashboardModal';
 import { VerificationModal } from './components/VerificationModal';
 import { PrizeAgreementModal } from './components/PrizeAgreementModal';
 import { TournamentRankingsModal } from './components/TournamentRankingsModal';
+import { SettlementModal } from './components/SettlementModal';
+import { PlayerPayoutHistoryModal } from './components/PlayerPayoutHistoryModal';
 import { HowItWorks } from './components/HowItWorks';
 import { ApiClient, TournamentItem } from './services/api';
 import { StellarWalletService, WalletState } from './services/stellar-wallet';
@@ -28,6 +30,8 @@ export const App: React.FC = () => {
   const [showFinancialModal, setShowFinancialModal] = useState<boolean>(false);
   const [showAgreementModal, setShowAgreementModal] = useState<boolean>(false);
   const [showRankingsModal, setShowRankingsModal] = useState<boolean>(false);
+  const [showSettlementModal, setShowSettlementModal] = useState<boolean>(false);
+  const [showPlayerPayoutsModal, setShowPlayerPayoutsModal] = useState<boolean>(false);
   const [showVerificationModal, setShowVerificationModal] = useState<boolean>(false);
   const [verificationMatchContext, setVerificationMatchContext] = useState<{ matchId: string; score: number } | null>(null);
   const [showGameView, setShowGameView] = useState<boolean>(false);
@@ -100,6 +104,15 @@ export const App: React.FC = () => {
     setShowRankingsModal(true);
   };
 
+  const handleSettleTournament = (t: TournamentItem) => {
+    setSelectedTournament(t);
+    setShowSettlementModal(true);
+  };
+
+  const handleOpenPayoutHistory = () => {
+    setShowPlayerPayoutsModal(true);
+  };
+
   const handleInspectVerification = (matchId: string, score: number) => {
     setVerificationMatchContext({ matchId, score });
     setShowVerificationModal(true);
@@ -131,6 +144,7 @@ export const App: React.FC = () => {
             setSelectedTournament(tournaments[0]);
           }
         }}
+        onOpenPayoutHistory={handleOpenPayoutHistory}
       />
 
       {/* Main Content */}
@@ -163,6 +177,7 @@ export const App: React.FC = () => {
                 onFinancials={handleFinancials}
                 onAgreement={handleAgreement}
                 onRankings={handleRankings}
+                onSettle={handleSettleTournament}
                 onCreateClick={() => setShowCreateModal(true)}
               />
             </div>
@@ -242,7 +257,29 @@ export const App: React.FC = () => {
         creatorWallet={selectedTournament?.creatorWallet}
         isOpen={showRankingsModal}
         onClose={() => setShowRankingsModal(false)}
+        onOpenSettlement={() => {
+          setShowRankingsModal(false);
+          setShowSettlementModal(true);
+        }}
       />
+
+      {/* Level 3 Deterministic Settlement Modal */}
+      {selectedTournament && showSettlementModal && (
+        <SettlementModal
+          tournament={selectedTournament}
+          userWallet={wallet.publicKey}
+          onClose={() => setShowSettlementModal(false)}
+          onSettled={loadTournaments}
+        />
+      )}
+
+      {/* Player Personal Payout History Modal */}
+      {showPlayerPayoutsModal && (
+        <PlayerPayoutHistoryModal
+          playerWallet={wallet.publicKey || 'GCKAZD66N6E64B44J7K3XW6P2W3V7QOXWCV7T4KQL3ZPL2GB6V2A73VU'}
+          onClose={() => setShowPlayerPayoutsModal(false)}
+        />
+      )}
 
       <VerificationModal
         matchId={verificationMatchContext?.matchId}

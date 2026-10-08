@@ -7,6 +7,7 @@ interface NavbarProps {
   onWalletChange: (w: WalletState) => void;
   activeTab: string;
   onTabChange: (tab: string) => void;
+  onOpenPayoutHistory?: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -14,6 +15,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   onWalletChange,
   activeTab,
   onTabChange,
+  onOpenPayoutHistory,
 }) => {
   const [loading, setLoading] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
@@ -134,6 +136,18 @@ export const Navbar: React.FC<NavbarProps> = ({
           <Globe size={14} />
           <span>Stellar Testnet</span>
         </div>
+
+        {/* My Payouts Button */}
+        {wallet.status === 'CONNECTED' && wallet.publicKey && onOpenPayoutHistory && (
+          <button
+            className="btn-secondary"
+            onClick={onOpenPayoutHistory}
+            style={{ padding: '8px 14px', fontSize: '0.85rem', borderColor: 'rgba(99, 102, 241, 0.4)', color: '#818cf8' }}
+            title="View Player Payout History & Receipts"
+          >
+            <span>🏆 My Payouts</span>
+          </button>
+        )}
 
         {/* Wallet Button */}
         {wallet.status === 'CONNECTED' && wallet.publicKey ? (

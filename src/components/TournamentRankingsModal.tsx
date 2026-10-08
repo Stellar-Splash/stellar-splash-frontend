@@ -7,6 +7,7 @@ interface TournamentRankingsModalProps {
   tournamentId?: string;
   tournamentName?: string;
   creatorWallet?: string;
+  onOpenSettlement?: () => void;
 }
 
 export const TournamentRankingsModal: React.FC<TournamentRankingsModalProps> = ({
@@ -15,6 +16,7 @@ export const TournamentRankingsModal: React.FC<TournamentRankingsModalProps> = (
   tournamentId = 'tourn-splash-001',
   tournamentName = 'Splash Rush Genesis Cup',
   creatorWallet = 'GA2C5RFPE6GCKMY3US5PAB6UZLKIGAHWKXX2GAKVOOUMVQHGASVMOROB',
+  onOpenSettlement,
 }) => {
   const [rankingRecord, setRankingRecord] = useState<FinalRankingRecord | null>(null);
   const [isFinalized, setIsFinalized] = useState(false);
@@ -162,13 +164,13 @@ export const TournamentRankingsModal: React.FC<TournamentRankingsModalProps> = (
                     <code>{rankingRecord.rankingHash}</code>
                   </div>
                   <p className="hash-desc">
-                    Level 3 settlement will consume this exact ranking hash. Any alteration to results or positions produces a different hash.
+                    Deterministic prize settlement will consume this exact ranking hash. Any alteration to results or positions produces a different hash.
                   </p>
                 </div>
               )}
 
               {/* Finalization Action Row */}
-              <div className="rankings-actions-row">
+              <div className="rankings-actions-row" style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
                 {!isFinalized ? (
                   <button
                     className="btn-primary glow"
@@ -178,8 +180,20 @@ export const TournamentRankingsModal: React.FC<TournamentRankingsModalProps> = (
                     {finalizing ? 'Finalizing...' : '🏆 Finalize Tournament Standings'}
                   </button>
                 ) : (
-                  <div className="finalized-confirmation">
+                  <div className="finalized-confirmation" style={{ display: 'flex', gap: '16px', alignItems: 'center', width: '100%', justifyContent: 'space-between' }}>
                     <span>✓ Standings finalized by <code>{rankingRecord?.finalizedBy}</code></span>
+                    {onOpenSettlement && (
+                      <button
+                        className="btn-primary"
+                        onClick={() => {
+                          onClose();
+                          onOpenSettlement();
+                        }}
+                        style={{ padding: '8px 16px', fontSize: '0.85rem' }}
+                      >
+                        ⚖️ Proceed to Settlement →
+                      </button>
+                    )}
                   </div>
                 )}
               </div>
