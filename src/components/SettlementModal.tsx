@@ -152,10 +152,25 @@ export const SettlementModal: React.FC<SettlementModalProps> = ({
   const isEligible = eligibility?.eligible ?? false;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
-      <div className="relative w-full max-w-4xl max-h-[92vh] overflow-hidden flex flex-col rounded-2xl border border-cyan-500/30 bg-slate-900 shadow-2xl text-slate-100 animate-in fade-in zoom-in-95 duration-200">
+    <div className="modal-backdrop" onClick={onClose} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
+      <div
+        className="modal-content large"
+        onClick={(e) => e.stopPropagation()}
+        style={{
+          maxWidth: '920px',
+          width: '95%',
+          maxHeight: '90vh',
+          display: 'flex',
+          flexDirection: 'column',
+          background: '#0b0f19',
+          border: '1px solid rgba(6, 182, 212, 0.4)',
+          borderRadius: '16px',
+          overflow: 'hidden',
+          boxShadow: '0 20px 50px rgba(0,0,0,0.8), 0 0 30px rgba(6, 182, 212, 0.2)',
+        }}
+      >
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-800 bg-slate-950/60">
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 24px', borderBottom: '1px solid rgba(255,255,255,0.08)', background: 'rgba(5, 8, 17, 0.8)' }}>
           <div className="flex items-center gap-3">
             <span className="p-2 rounded-xl bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 text-xl">
               ⚖️

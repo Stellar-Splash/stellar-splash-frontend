@@ -1,66 +1,103 @@
 # 🌊 Stellar Splash Frontend
 
-The player-facing gaming platform and tournament arena for Stellar Splash on Stellar Testnet.
-
----
-
-## Core Product
-
 > **Play. Prove. Get Paid.**
+>
+> Compete in skill-based tournaments with prize pools funded, verified, and settled deterministically on Stellar.
 
-Supporting statement:
-> **Compete in skill-based tournaments with prize pools funded and settled through Stellar.**
-
-Stellar Splash is a skill-based gaming platform where creators fund tournament prize pools on Stellar, players compete in fast-paced games, gameplay results are deterministically recorded, and verified outcomes become programmable Stellar settlements.
-
----
-
-## Key Features
-
-1. **Splash Rush Game Engine**:
-   - High-speed 45-second browser skill game.
-   - Dynamic targets, multipliers, combo chain counters, floating scores, and hazard obstacles.
-   - Strict client-side state machine: `READY -> COUNTDOWN -> PLAYING -> COMPLETED -> SUBMITTING -> RESULT_READY`.
-   - Comprehensive event stream logging emitting sequence timestamps, points, combos, and coordinates for backend verification.
-2. **Stellar Testnet Wallet Integration**:
-   - Zero-friction testing: instant testnet wallet generator with automated Friendbot funding.
-   - Live balance tracking and network validation for **Stellar Testnet**.
-3. **Tournament Discovery & Creation**:
-   - Real-time tournament discovery with status filters (`OPEN`, `FUNDING`, `IN_PROGRESS`, `FULL`, `COMPLETED`).
-   - Creator suite with explicit separation between **Tournament Configuration** and **Prize Pool Funding**.
-4. **Real Stellar Testnet Prize Funding Flow**:
-   - Multi-state transaction indicator:
-     `READY -> WALLET_REQUIRED -> REVIEW -> SIGNING -> SUBMITTING -> CONFIRMING -> CONFIRMED`.
-   - Executes real payment operations to tournament vault addresses on Stellar Testnet.
-   - Requires independent transaction verification from backend before tournament opens.
-   - Direct links to Stellar Expert Explorer (`https://stellar.expert/explorer/testnet/tx/...`).
-5. **Independent Match Verification & Attestation Suite**:
-   - Inspects deterministic replay of event logs against the canonical game version rules.
-   - Compares client-submitted scores vs independently replayed scores.
-   - Interactive simulation mode to demonstrate automatic rejection of tampered/forged client scores.
-   - Displays canonical SHA-256 result hash and signed cryptographic attestations from authorized verifiers.
-6. **Tournament Prize Agreement Governance**:
-   - Displays structured material financial terms: Prize Asset, Prize Pool Amount, Basis Point Allocations (10,000 bps invariant), Integer Floor Rounding, and Dust Residual assigned to Rank 1.
-   - Supports Creator wallet approval and permanent agreement locking (`LOCKED`).
-   - Immutability guarantee: locked agreements cannot be mutated; new versions increment cleanly (`v1`, `v2`) with superseding.
-7. **Verified Tournament Standings & Canonical Ranking Hash**:
-   - Calculates standings deterministically using only verified match results.
-   - Enforces 3-tier tie-breaker rules: Primary (Score), Secondary (Accuracy), Tertiary (Completion Timestamp).
-   - Generates and locks canonical 32-byte ranking hash for future settlement ingestion.
-8. **Deterministic Prize Settlement & Multi-Recipient Payout**:
-   - Evaluates strict multi-step eligibility pipeline before executing any settlement.
-   - Previews deterministic basis-point allocations (10,000 bps invariant) and residual dust handling awarded to Rank 1.
-   - Binds settlement authorization cryptographically to the locked prize agreement and finalized ranking hashes.
-   - Submits multi-recipient Stellar Testnet transfers and generates individual transaction hashes with explorer links.
-   - Permanent verifiable settlement receipts and independent on-chain reconciliation verification.
-9. **Player Payout History & Live Tournament Leaderboard**:
-   - Dedicated "My Payouts" personal dashboard tracking verified tournament winnings and explorer proofs.
-   - Real-time player standings with explicit distinction between **Current Score** and **Final Verified Result**.
-   - Inspects prize pool amounts, assets, funding confirmation status, transaction hashes, and reconciliation status (`RECONCILED`).
+[![Netlify Status](https://api.netlify.com/api/v1/badges/f8ec4a3a-bcb6-4879-b4d0-1c9224465e36/deploy-status)](https://app.netlify.com/projects/stellar-splash/deploys)
+[![Stellar Network](https://img.shields.io/badge/Stellar-Testnet-08B5E5.svg)](https://stellar.org)
+[![Soroban Smart Contract](https://img.shields.io/badge/Soroban-Deployed-brightgreen.svg)](https://lab.stellar.org/r/testnet/contract/CACHWJEZY6JN36VFACWRQ7FP4T5EPRRRNBVLOSFHXTJHETZY36JD7QYJ)
 
 ---
 
-## Architecture
+## 🚀 Live Deployments & Network Details
+
+| Resource | Value / Link |
+| :--- | :--- |
+| **Live Web Application (Netlify)** | [https://stellar-splash.netlify.app](https://stellar-splash.netlify.app) |
+| **Soroban Smart Contract** | [`CACHWJEZY6JN36VFACWRQ7FP4T5EPRRRNBVLOSFHXTJHETZY36JD7QYJ`](https://lab.stellar.org/r/testnet/contract/CACHWJEZY6JN36VFACWRQ7FP4T5EPRRRNBVLOSFHXTJHETZY36JD7QYJ) |
+| **Stellar Network** | `Stellar Testnet` (Passphrase: `Test SDF Network ; September 2015`) |
+| **Horizon RPC** | `https://horizon-testnet.stellar.org` |
+| **Soroban RPC** | `https://soroban-testnet.stellar.org` |
+| **Contract Explorer** | [View on Stellar Lab](https://lab.stellar.org/r/testnet/contract/CACHWJEZY6JN36VFACWRQ7FP4T5EPRRRNBVLOSFHXTJHETZY36JD7QYJ) |
+
+---
+
+## 📸 Product Operations & Screenshots
+
+### 1. Tournament Discovery & Prize Pool Escrow
+Explore open tournaments, real-time participant counters, entry fees, and prize pool funding status backed by Stellar Testnet escrow vaults.
+
+![Tournament Discovery and Prize Pool Status](docs/images/01_arena_discovery.png)
+
+*Key Operations:*
+- Live status filters (`OPEN`, `FUNDING`, `IN_PROGRESS`, `COMPLETED`).
+- Immediate Friendbot testnet wallet funding for zero-friction player onboarding.
+- Real-time prize pool escrow balances tracked directly against Stellar ledger states.
+
+---
+
+### 2. Splash Rush Gameplay Arena
+High-speed 45-second browser skill game featuring dynamic targets, combo multipliers, hazard avoidance, and client-side deterministic event streaming.
+
+![Splash Rush Gameplay Arena](docs/images/02_splash_rush_game.png)
+
+*Key Operations:*
+- Canvas particle loop with 60 FPS precision and reactive visual feedback.
+- High-frequency event recording capturing timestamped click events, target variants, and positions.
+- Immediate payload serialization preventing score fabrication before ingestion by the backend verification engine.
+
+---
+
+### 3. Prize Agreement & Basis-Point Financial Governance
+Transparent, immutable prize agreements establishing the mathematical terms of settlement before gameplay commences.
+
+![Prize Agreement and Financial Governance](docs/images/03_prize_agreement.png)
+
+*Key Operations:*
+- Basis-point allocation breakdown strictly adhering to the 10,000 bps invariant ($100.00\%$).
+- Exact integer floor rounding and deterministic dust allocation assigned to Rank 1.
+- Multi-party creator approval workflow and permanent cryptographic locking (`LOCKED`).
+
+---
+
+### 4. Verified Tournament Standings & Canonical Ranking Hash
+Deterministic standings calculated exclusively from independently verified match replay scores, locked under a 32-byte SHA-256 ranking hash.
+
+![Verified Tournament Standings](docs/images/04_verified_standings.png)
+
+*Key Operations:*
+- 3-tier tie-breaking algorithm: Primary (Score), Secondary (Accuracy), Tertiary (Completion Timestamp).
+- Explicit audit verification for each player match with signed verifier attestations.
+- Canonical ranking hash registration committed on-chain to prevent ranking tampering.
+
+---
+
+### 5. Deterministic Prize Settlement & Multi-Recipient Payouts
+Cryptographically authorized, multi-recipient settlement executed directly from the Stellar escrow vault.
+
+![Deterministic Prize Settlement](docs/images/05_deterministic_settlement.png)
+
+*Key Operations:*
+- 5-point automated settlement eligibility verification.
+- Real-time accounting invariant checks ($100\%$ sum consistency).
+- Multi-recipient Stellar Testnet transfers with individual transaction hashes and Stellar Expert explorer links.
+
+---
+
+### 6. Player Payout History & Settlement Receipts
+Personal settlement dashboard providing players with transparent, cryptographically verifiable records of their tournament earnings.
+
+![Player Payout History](docs/images/06_player_payout_history.png)
+
+*Key Operations:*
+- Historical payout receipts with timestamp, rank, prize asset, and amount.
+- Direct links to Stellar Expert Explorer for immutable on-chain payment proof.
+- Continuous on-chain reconciliation verification (`RECONCILED`).
+
+---
+
+## 🛠️ Architecture & Data Flow
 
 ```text
                +-------------------------------------------+
@@ -76,7 +113,7 @@ Stellar Splash is a skill-based gaming platform where creators fund tournament p
 +------------------+                                    +------------------+
 | - Canvas loop    |                                    | - Testnet wallet |
 | - Particle synth |                                    | - Sign & Submit  |
-| - Event log      |                                    | - Vault deposit  |
+| - Event stream   |                                    | - Vault deposit  |
 +------------------+                                    +------------------+
          |                                                       |
          +---------------------------+---------------------------+
@@ -90,7 +127,24 @@ Stellar Splash is a skill-based gaming platform where creators fund tournament p
 
 ---
 
-## Local Development
+## 🎮 Game Rules: Splash Rush v1.0.0
+
+- **Round Duration**: 45 seconds.
+- **Scoring Formula**:
+  $$\text{Score} = \text{Base Points} + \text{Combo Bonus} + \text{Multiplier Bonus} - \text{Penalties}$$
+- **Target Types**:
+  - **Standard Target (Cyan)**: 100 Base Points.
+  - **Burst Target (Purple)**: 200 Base Points.
+  - **Golden Target (Gold)**: 300 Base Points.
+  - **Hazard Spike (Red)**: -50 Penalty points and resets combo streak to 0.
+- **Multipliers**:
+  - 5 Combo Streak: 2x
+  - 10 Combo Streak: 3x
+  - 15+ Combo Streak: 4x
+
+---
+
+## 💻 Local Development
 
 ### Prerequisites
 - Node.js >= 18.x
@@ -110,30 +164,10 @@ npm test
 ```bash
 npm run dev
 ```
+The application will launch on `http://localhost:3000` and proxy backend requests to port `4000`.
 
-Application will be available on `http://localhost:3000` (proxies `/api` to the backend engine on port `4000`).
-
-### Build for Production
+### Production Build
 ```bash
 npm run build
 ```
-
----
-
-## Game Rules: Splash Rush v1.0.0
-
-- **Round Duration**: 45 seconds.
-- **Scoring Formula**:
-  ```text
-  Score = Base Points + Combo Bonus + Multiplier Bonus - Penalties
-  ```
-- **Target Types**:
-  - **Standard Target (Cyan)**: 100 Base Points.
-  - **Burst Target (Purple)**: 200 Base Points.
-  - **Golden Target (Gold)**: 300 Base Points.
-  - **Hazard Spike (Red)**: -50 Penalty points and resets combo streak to 0.
-- **Multipliers**:
-  - 5 Combo Streak: 2x
-  - 10 Combo Streak: 3x
-  - 15+ Combo Streak: 4x
-- **Deterministic Recording**: Every action generates an event record ingested by the backend engine to prevent score tampering.
+Deploy the resulting `dist/` directory to Netlify or any static hosting provider.
