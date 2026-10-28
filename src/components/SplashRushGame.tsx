@@ -333,7 +333,7 @@ export const SplashRushGame: React.FC<SplashRushProps> = ({
     }
 
     if (!hitFound) {
-      playSound(200, 'sine', 0.03);
+      AudioSynthService.playMiss();
       setCombo(0);
       setMultiplier(1);
       setMisses((m) => m + 1);

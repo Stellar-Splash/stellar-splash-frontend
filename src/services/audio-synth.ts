@@ -180,4 +180,31 @@ export class AudioSynthService {
     osc.start(now);
     osc.stop(now + 0.08);
   }
+
+  /**
+   * Subtle click when clicking empty water (miss).
+   */
+  public static playMiss(): void {
+    if (this.muted) return;
+    const ctx = this.getContext();
+    if (!ctx) return;
+
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    const now = ctx.currentTime;
+
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(200, now);
+    osc.frequency.linearRampToValueAtTime(100, now + 0.04);
+
+    const vol = this.masterVolume * 0.2;
+    gain.gain.setValueAtTime(vol, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
+
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+
+    osc.start(now);
+    osc.stop(now + 0.04);
+  }
 }
