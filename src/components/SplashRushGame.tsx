@@ -1,7 +1,8 @@
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import confetti from 'canvas-confetti';
-import { Play, RotateCcw, ShieldCheck, Zap, AlertTriangle, Trophy } from 'lucide-react';
+import { Play, RotateCcw, ShieldCheck, Zap, AlertTriangle, Trophy, Volume2, VolumeX } from 'lucide-react';
 import { ApiClient } from '../services/api';
+import { AudioSynthService } from '../services/audio-synth';
 
 interface Target {
   id: number;
@@ -72,23 +73,12 @@ export const SplashRushGame: React.FC<SplashRushProps> = ({
   const lastSpawnRef = useRef<number>(0);
   const timerIntervalRef = useRef<any>(null);
 
-  // Audio Synth via Web Audio API
-  const playSound = (freq: number, type: OscillatorType = 'sine', duration: number = 0.08) => {
-    try {
-      const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.type = type;
-      osc.frequency.setValueAtTime(freq, ctx.currentTime);
-      gain.gain.setValueAtTime(0.15, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.start();
-      osc.stop(ctx.currentTime + duration);
-    } catch {
-      // Audio might be muted or blocked by browser policy
-    }
+  const [isMuted, setIsMuted] = useState<boolean>(AudioSynthService.isMuted());
+
+  const toggleAudio = () => {
+    const next = !isMuted;
+    AudioSynthService.setMuted(next);
+    setIsMuted(next);
   };
 
   const spawnTarget = useCallback((width: number, height: number) => {
@@ -187,10 +177,10 @@ export const SplashRushGame: React.FC<SplashRushProps> = ({
       count -= 1;
       if (count > 0) {
         setCountdown(count);
-        playSound(440, 'sine', 0.05);
+        AudioSynthService.playCountdownTick(false);
       } else {
         clearInterval(interval);
-        playSound(880, 'triangle', 0.15);
+        AudioSynthService.playCountdownTick(true);
         launchRound();
       }
     }, 800);
@@ -224,7 +214,7 @@ export const SplashRushGame: React.FC<SplashRushProps> = ({
 
   const finishRound = async () => {
     setGameState('COMPLETED');
-    playSound(520, 'square', 0.25);
+    AudioSynthService.playBuzzer();
 
     // Finalize submission
     setGameState('SUBMITTING');
@@ -279,7 +269,7 @@ export const SplashRushGame: React.FC<SplashRushProps> = ({
 
         if (t.type === 'HAZARD') {
           // Penalty
-          playSound(150, 'sawtooth', 0.15);
+          AudioSynthService.playHazardPenalty();
           addParticles(t.x, t.y, '#f43f5e', 12);
           addFloatingText(t.x, t.y, '-50 PENALTY', '#f43f5e');
 
@@ -311,7 +301,10 @@ export const SplashRushGame: React.FC<SplashRushProps> = ({
           setHits((h) => h + 1);
 
           const color = t.type === 'GOLDEN' ? '#ffb800' : t.type === 'BURST' ? '#a855f7' : '#00f0ff';
-          playSound(400 + newCombo * 25, 'sine', 0.06);
+          AudioSynthService.playTargetHit(newCombo);
+          if (newCombo % 5 === 0) {
+            AudioSynthService.playComboStreak(newCombo);
+          }
           addParticles(t.x, t.y, color, 14);
           addFloatingText(t.x, t.y, `+${pointsAwarded}`, color);
 
@@ -509,6 +502,25 @@ export const SplashRushGame: React.FC<SplashRushProps> = ({
         </div>
 
         <div style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
+          <button
+            onClick={toggleAudio}
+            style={{
+              background: isMuted ? 'rgba(255, 0, 85, 0.1)' : 'rgba(0, 240, 255, 0.1)',
+              border: `1px solid ${isMuted ? 'rgba(255, 0, 85, 0.3)' : 'rgba(0, 240, 255, 0.3)'}`,
+              borderRadius: '8px',
+              padding: '8px',
+              color: isMuted ? 'var(--rose-glow)' : 'var(--cyan-glow)',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              transition: 'all 0.2s ease',
+            }}
+            title={isMuted ? 'Unmute Audio' : 'Mute Audio'}
+          >
+            {isMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}
+          </button>
+
           <div style={{ textAlign: 'right' }}>
             <span style={{ fontSize: '0.75rem', color: 'var(--text-dim)', textTransform: 'uppercase' }}>Time Left</span>
             <div style={{ fontSize: '1.4rem', fontWeight: 800, fontFamily: 'var(--font-mono)', color: timeLeft < 10 ? 'var(--rose-glow)' : 'var(--text-main)' }}>
