@@ -19,4 +19,14 @@ describe('SorobanContractService Operation Builders', () => {
     expect(op.body().switch().name).toBe('invokeHostFunction');
   });
 
+  it('builds a valid register_participant Soroban contract call operation', () => {
+    const op = SorobanContractService.buildRegisterParticipantOp(
+      dummyWallet,
+      101,
+      dummyContract
+    );
+
+    expect(op).toBeDefined();
+    expect(op.body().switch().name).toBe('invokeHostFunction');
+  });
 });

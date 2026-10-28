@@ -53,6 +53,21 @@ export class SorobanContractService {
     );
   }
 
+  /**
+   * Constructs a Soroban contract call Operation for registering a participant.
+   */
+  public static buildRegisterParticipantOp(
+    playerAddress: string,
+    tournamentId: number | bigint,
+    contractId = this.DEFAULT_CONTRACT_ID
+  ): xdr.Operation {
+    const contract = new Contract(contractId);
+    return contract.call(
+      'register_participant',
+      new Address(playerAddress).toScVal(),
+      nativeToScVal(tournamentId, { type: 'u64' })
+    );
+  }
 
   /**
    * Builds an uncompleted transaction containing the Soroban contract call operation.
