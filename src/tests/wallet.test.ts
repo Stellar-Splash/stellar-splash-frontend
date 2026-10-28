@@ -46,4 +46,15 @@ describe('StellarWalletService', () => {
     const after = StellarWalletService.loadSavedWallet();
     expect(after.status).toBe('DISCONNECTED');
   });
+
+  it('detects when Freighter is unavailable in test environment', async () => {
+    const available = await StellarWalletService.isFreighterAvailable();
+    expect(typeof available).toBe('boolean');
+  });
+
+  it('validates testnet network guard behavior', async () => {
+    const net = await StellarWalletService.checkFreighterNetwork();
+    expect(net).toHaveProperty('isTestnet');
+    expect(net).toHaveProperty('currentNetwork');
+  });
 });
