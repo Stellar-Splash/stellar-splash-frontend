@@ -147,13 +147,19 @@ export class SorobanContractService {
       throw new Error(`Soroban RPC submission error: ${sendRes.errorResultXdr || 'Unknown error'}`);
     }
 
-    // Poll confirmation
     const pollRes = await SorobanRpcService.pollTransaction(sendRes.hash);
+    const finalStatus: 'SUCCESS' | 'FAILED' | 'PENDING' =
+      pollRes.status === 'SUCCESS'
+        ? 'SUCCESS'
+        : pollRes.status === 'FAILED'
+        ? 'FAILED'
+        : 'PENDING';
+
     return {
       txHash: sendRes.hash,
-      status: pollRes.status,
+      status: finalStatus,
       ledger: pollRes.ledger,
-      error: pollRes.status === 'FAILED' ? 'Transaction execution failed on-chain' : undefined,
+      error: finalStatus === 'FAILED' ? 'Transaction execution failed on-chain' : undefined,
     };
   }
 }

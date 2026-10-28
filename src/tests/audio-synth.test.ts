@@ -39,7 +39,7 @@ describe('AudioSynthService', () => {
       resume: vi.fn().mockResolvedValue(undefined),
     };
 
-    (global as any).window = {
+    (globalThis as any).window = {
       AudioContext: vi.fn(() => mockAudioContext),
     };
   });
