@@ -18,9 +18,7 @@ export function generateLeaderboardCSV(tournament: TournamentItem, leaderboard: 
     'MatchesPlayed',
     'VerificationStatus',
     'VerifiedScore',
-    'CompletedAt',
-    'VerifiedAt',
-    'ProofHash',
+    'ResultHash',
   ];
 
   const rows = leaderboard.map((entry) => [
@@ -28,11 +26,9 @@ export function generateLeaderboardCSV(tournament: TournamentItem, leaderboard: 
     `"${entry.playerWallet}"`,
     entry.currentScore,
     entry.matchesPlayed,
-    entry.finalVerifiedResult ? 'VERIFIED' : 'PENDING',
+    entry.finalVerifiedResult?.verified ? 'VERIFIED' : 'PENDING',
     entry.finalVerifiedResult?.score ?? '',
-    entry.finalVerifiedResult?.completedAt ? `"${entry.finalVerifiedResult.completedAt}"` : '',
-    entry.finalVerifiedResult?.verifiedAt ? `"${entry.finalVerifiedResult.verifiedAt}"` : '',
-    entry.finalVerifiedResult?.proofHash ? `"${entry.finalVerifiedResult.proofHash}"` : '',
+    entry.finalVerifiedResult?.resultHash ? `"${entry.finalVerifiedResult.resultHash}"` : '',
   ]);
 
   return [headers.join(','), ...rows.map((r) => r.join(','))].join('\n');

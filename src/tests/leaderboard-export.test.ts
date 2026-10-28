@@ -4,22 +4,22 @@ import { TournamentItem, LeaderboardEntry } from '../services/api';
 
 describe('Leaderboard Data Export (CSV & JSON)', () => {
   const mockTournament: TournamentItem = {
-    id: 42,
+    id: '42',
     name: 'Cosmic Splash Championship',
     description: 'A test tournament',
     creatorWallet: 'GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5',
-    prizePoolAmount: '1000',
+    prizePoolAmount: 1000,
     prizeAsset: 'XLM',
     startTime: 1000,
     endTime: 2000,
-    status: 'ACTIVE',
-    minParticipants: 4,
     maxParticipants: 16,
     currentParticipants: 2,
     gameId: 'splash-rush-v1',
-    activeAgreementVersion: 1,
-    currentFundedAmount: '1000',
-    contractTournamentId: '42',
+    gameVersion: '1.0.0',
+    vaultAddress: 'CACHWJEZY6JN36VFACWRQ7FP4T5EPRRRNBVLOSFHXTJHETZY36JD7QYJ',
+    state: 'OPEN',
+    createdAt: 1000,
+    updatedAt: 1000,
   };
 
   const mockLeaderboard: LeaderboardEntry[] = [
@@ -29,11 +29,12 @@ describe('Leaderboard Data Export (CSV & JSON)', () => {
       shortWallet: 'GAAA...FGGG',
       currentScore: 1250,
       matchesPlayed: 3,
+      status: 'ACTIVE',
+      scoreLabel: 'Current Score',
       finalVerifiedResult: {
         score: 1250,
-        completedAt: '2026-10-29T00:00:00Z',
-        verifiedAt: '2026-10-29T00:01:00Z',
-        proofHash: 'abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789',
+        resultHash: 'abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789',
+        verified: true,
       },
     },
     {
@@ -42,23 +43,26 @@ describe('Leaderboard Data Export (CSV & JSON)', () => {
       shortWallet: 'GBBB...FGGG',
       currentScore: 920,
       matchesPlayed: 2,
+      status: 'ACTIVE',
+      scoreLabel: 'Current Score',
+      finalVerifiedResult: null,
     },
   ];
 
   it('generates valid RFC-compliant CSV with headers and row fields', () => {
     const csv = generateLeaderboardCSV(mockTournament, mockLeaderboard);
-    expect(csv).toContain('Rank,PlayerWallet,CurrentScore,MatchesPlayed,VerificationStatus,VerifiedScore,CompletedAt,VerifiedAt,ProofHash');
+    expect(csv).toContain('Rank,PlayerWallet,CurrentScore,MatchesPlayed,VerificationStatus,VerifiedScore,ResultHash');
     
     // First row (verified)
-    expect(csv).toContain('1,"GAAAZZZ111222333444555666777888999AAABBBCCCDDDEEEFFFGGG",1250,3,VERIFIED,1250,"2026-10-29T00:00:00Z","2026-10-29T00:01:00Z","abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789"');
+    expect(csv).toContain('1,"GAAAZZZ111222333444555666777888999AAABBBCCCDDDEEEFFFGGG",1250,3,VERIFIED,1250,"abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789"');
 
     // Second row (pending verification)
-    expect(csv).toContain('2,"GBBBZZZ111222333444555666777888999AAABBBCCCDDDEEEFFFGGG",920,2,PENDING,,,,');
+    expect(csv).toContain('2,"GBBBZZZ111222333444555666777888999AAABBBCCCDDDEEEFFFGGG",920,2,PENDING,,');
   });
 
   it('generates structured JSON export payload containing tournament telemetry and participants', () => {
     const json = generateLeaderboardJSON(mockTournament, mockLeaderboard);
-    expect(json.tournamentId).toBe(42);
+    expect(json.tournamentId).toBe('42');
     expect(json.tournamentName).toBe('Cosmic Splash Championship');
     expect(json.totalParticipants).toBe(2);
     expect(json.leaderboard).toHaveLength(2);
