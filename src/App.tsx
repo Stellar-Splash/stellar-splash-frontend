@@ -14,6 +14,7 @@ import { SettlementModal } from './components/SettlementModal';
 import { PlayerPayoutHistoryModal } from './components/PlayerPayoutHistoryModal';
 import { HowItWorks } from './components/HowItWorks';
 import { NetworkStatusBar } from './components/NetworkStatusBar';
+import { ToastContainer } from './components/ToastContainer';
 import { ApiClient, TournamentItem } from './services/api';
 import { StellarWalletService, WalletState } from './services/stellar-wallet';
 
@@ -308,6 +309,7 @@ export const App: React.FC = () => {
       </footer>
 
       <NetworkStatusBar />
+      <ToastContainer />
     </div>
   );
 };
