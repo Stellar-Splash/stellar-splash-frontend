@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import confetti from 'canvas-confetti';
-import { Play, RotateCcw, ShieldCheck, Zap, AlertTriangle, Trophy, Volume2, VolumeX } from 'lucide-react';
+import { Play, RotateCcw, ShieldCheck, Zap, AlertTriangle, Trophy, Volume2, VolumeX, Flame } from 'lucide-react';
 import { ApiClient } from '../services/api';
 import { AudioSynthService } from '../services/audio-synth';
 
@@ -537,23 +537,69 @@ export const SplashRushGame: React.FC<SplashRushProps> = ({
             {isMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}
           </button>
 
+          {/* Time Left */}
           <div style={{ textAlign: 'right' }}>
-            <span style={{ fontSize: '0.75rem', color: 'var(--text-dim)', textTransform: 'uppercase' }}>Time Left</span>
-            <div style={{ fontSize: '1.4rem', fontWeight: 800, fontFamily: 'var(--font-mono)', color: timeLeft < 10 ? 'var(--rose-glow)' : 'var(--text-main)' }}>
+            <span style={{ fontSize: '0.7rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Time Left</span>
+            <div style={{ fontSize: '1.3rem', fontWeight: 800, fontFamily: 'var(--font-mono)', color: timeLeft < 10 ? 'var(--rose-glow)' : 'var(--text-main)' }}>
               {timeLeft}s
             </div>
           </div>
 
+          {/* Accuracy Meter */}
           <div style={{ textAlign: 'right' }}>
-            <span style={{ fontSize: '0.75rem', color: 'var(--text-dim)', textTransform: 'uppercase' }}>Multiplier</span>
-            <div style={{ fontSize: '1.4rem', fontWeight: 800, fontFamily: 'var(--font-mono)', color: 'var(--gold-glow)' }}>
+            <span style={{ fontSize: '0.7rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Accuracy</span>
+            <div
+              style={{
+                fontSize: '1.3rem',
+                fontWeight: 800,
+                fontFamily: 'var(--font-mono)',
+                color: hits + misses === 0 ? 'var(--cyan-glow)' : Math.round((hits / (hits + misses)) * 100) >= 80 ? 'var(--cyan-glow)' : Math.round((hits / (hits + misses)) * 100) >= 50 ? 'var(--gold-glow)' : 'var(--rose-glow)',
+              }}
+            >
+              {hits + misses === 0 ? '100%' : `${Math.round((hits / (hits + misses)) * 100)}%`}
+            </div>
+          </div>
+
+          {/* Streak Counter */}
+          <div style={{ textAlign: 'right' }}>
+            <span style={{ fontSize: '0.7rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Streak</span>
+            <div
+              style={{
+                fontSize: '1.3rem',
+                fontWeight: 800,
+                fontFamily: 'var(--font-mono)',
+                color: combo >= 10 ? 'var(--gold-glow)' : combo >= 5 ? 'var(--cyan-glow)' : 'var(--text-main)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'flex-end',
+                gap: '4px',
+              }}
+            >
+              {combo >= 5 && <Flame size={14} color={combo >= 10 ? '#ffb800' : '#00f0ff'} />}
+              {combo}
+            </div>
+          </div>
+
+          {/* Multiplier with visual glow */}
+          <div style={{ textAlign: 'right' }}>
+            <span style={{ fontSize: '0.7rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Multiplier</span>
+            <div
+              style={{
+                fontSize: '1.3rem',
+                fontWeight: 800,
+                fontFamily: 'var(--font-mono)',
+                color: multiplier > 1 ? 'var(--gold-glow)' : 'var(--text-dim)',
+                textShadow: multiplier >= 3 ? '0 0 12px rgba(255, 184, 0, 0.6)' : 'none',
+              }}
+            >
               {multiplier}x
             </div>
           </div>
 
+          {/* Current Score */}
           <div style={{ textAlign: 'right' }}>
-            <span style={{ fontSize: '0.75rem', color: 'var(--text-dim)', textTransform: 'uppercase' }}>Current Score</span>
-            <div style={{ fontSize: '1.6rem', fontWeight: 800, fontFamily: 'var(--font-mono)', color: 'var(--cyan-glow)' }}>
+            <span style={{ fontSize: '0.7rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Score</span>
+            <div style={{ fontSize: '1.5rem', fontWeight: 800, fontFamily: 'var(--font-mono)', color: 'var(--cyan-glow)' }}>
               {score}
             </div>
           </div>
