@@ -258,16 +258,100 @@ export interface PlayerPayoutItem {
 }
 
 const API_BASE = '/api';
+export const TOURNAMENTS_CACHE_KEY = 'stellar_splash_tournaments_cache_v1';
+export const DEFAULT_TOURNAMENTS_CACHE_TTL_MS = 60_000; // 60 seconds
+
+export interface CachedTournamentsEnvelope {
+  timestamp: number;
+  ttlMs: number;
+  tournaments: TournamentItem[];
+}
+
+export function getCachedTournaments(storage: Storage | null = typeof window !== 'undefined' ? window.localStorage : null): {
+  cached: TournamentItem[] | null;
+  isStale: boolean;
+} {
+  if (!storage) return { cached: null, isStale: true };
+  try {
+    const raw = storage.getItem(TOURNAMENTS_CACHE_KEY);
+    if (!raw) return { cached: null, isStale: true };
+    const envelope: CachedTournamentsEnvelope = JSON.parse(raw);
+    if (!envelope || !Array.isArray(envelope.tournaments)) {
+      return { cached: null, isStale: true };
+    }
+    const isStale = Date.now() - envelope.timestamp > envelope.ttlMs;
+    return { cached: envelope.tournaments, isStale };
+  } catch (err) {
+    return { cached: null, isStale: true };
+  }
+}
+
+export function setCachedTournaments(
+  tournaments: TournamentItem[],
+  ttlMs: number = DEFAULT_TOURNAMENTS_CACHE_TTL_MS,
+  storage: Storage | null = typeof window !== 'undefined' ? window.localStorage : null
+): void {
+  if (!storage) return;
+  try {
+    const envelope: CachedTournamentsEnvelope = {
+      timestamp: Date.now(),
+      ttlMs,
+      tournaments,
+    };
+    storage.setItem(TOURNAMENTS_CACHE_KEY, JSON.stringify(envelope));
+  } catch (err) {
+    // quota exceeded or private mode guard
+  }
+}
+
+export function clearTournamentsCache(
+  storage: Storage | null = typeof window !== 'undefined' ? window.localStorage : null
+): void {
+  if (!storage) return;
+  try {
+    storage.removeItem(TOURNAMENTS_CACHE_KEY);
+  } catch (err) {
+    // ignore
+  }
+}
 
 export class ApiClient {
-  public static async getTournaments(): Promise<TournamentItem[]> {
-    try {
-      const res = await fetch(`${API_BASE}/tournaments`);
-      const data = await res.json();
-      if (data.success) return data.tournaments;
-    } catch (err) {
-      console.warn('API lookup failed, falling back to cached seed:', err);
+  public static async getTournaments(options?: {
+    forceFresh?: boolean;
+    ttlMs?: number;
+  }): Promise<TournamentItem[]> {
+    const { cached, isStale } = getCachedTournaments();
+
+    // Stale-while-revalidate: if fresh cache exists and fresh not forced, return immediately
+    if (cached && !isStale && !options?.forceFresh) {
+      return cached;
     }
+
+    // Trigger revalidation promise
+    const fetchFresh = async (): Promise<TournamentItem[] | null> => {
+      try {
+        const res = await fetch(`${API_BASE}/tournaments`);
+        const data = await res.json();
+        if (data.success && Array.isArray(data.tournaments)) {
+          setCachedTournaments(data.tournaments, options?.ttlMs ?? DEFAULT_TOURNAMENTS_CACHE_TTL_MS);
+          return data.tournaments;
+        }
+      } catch (err) {
+        console.warn('API lookup failed:', err);
+      }
+      return null;
+    };
+
+    // If stale cached tournaments exist and fresh not strictly required, return stale immediately while revalidating
+    if (cached && !options?.forceFresh) {
+      // Background revalidation
+      fetchFresh().catch(() => {});
+      return cached;
+    }
+
+    const fresh = await fetchFresh();
+    if (fresh) return fresh;
+    if (cached) return cached;
 
     return [
       {
