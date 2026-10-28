@@ -9,6 +9,58 @@ import {
   SettlementReconciliationRecord,
 } from '../services/api';
 
+export interface SettlementCountdownResult {
+  isEnded: boolean;
+  totalSecondsRemaining: number;
+  days: number;
+  hours: number;
+  minutes: number;
+  seconds: number;
+  formatted: string;
+}
+
+export function calculateSettlementTimeRemaining(
+  endTime: number,
+  nowMs: number = Date.now()
+): SettlementCountdownResult {
+  const endMs = endTime > 1e11 ? endTime : endTime * 1000;
+  const diffMs = endMs - nowMs;
+
+  if (diffMs <= 0) {
+    return {
+      isEnded: true,
+      totalSecondsRemaining: 0,
+      days: 0,
+      hours: 0,
+      minutes: 0,
+      seconds: 0,
+      formatted: '00:00:00 (Elapsed - Settlement Ready)',
+    };
+  }
+
+  const totalSeconds = Math.floor(diffMs / 1000);
+  const days = Math.floor(totalSeconds / 86400);
+  const hours = Math.floor((totalSeconds % 86400) / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+
+  const pad = (n: number) => n.toString().padStart(2, '0');
+  const formatted =
+    days > 0
+      ? `${days}d ${pad(hours)}h ${pad(minutes)}m ${pad(seconds)}s`
+      : `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+
+  return {
+    isEnded: false,
+    totalSecondsRemaining: totalSeconds,
+    days,
+    hours,
+    minutes,
+    seconds,
+    formatted,
+  };
+}
+
 interface SettlementModalProps {
   tournament: TournamentItem;
   userWallet: string | null;
@@ -32,6 +84,9 @@ export const SettlementModal: React.FC<SettlementModalProps> = ({
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'PREVIEW' | 'RECEIPT' | 'RECONCILIATION'>('PREVIEW');
+  const [countdown, setCountdown] = useState<SettlementCountdownResult>(() =>
+    calculateSettlementTimeRemaining(tournament.endTime)
+  );
 
   const loadData = async () => {
     setLoading(true);
@@ -73,6 +128,14 @@ export const SettlementModal: React.FC<SettlementModalProps> = ({
   useEffect(() => {
     loadData();
   }, [tournament.id]);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      const remaining = calculateSettlementTimeRemaining(tournament.endTime);
+      setCountdown(remaining);
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [tournament.endTime]);
 
   const handleAuthorize = async () => {
     if (!userWallet) {
@@ -255,6 +318,35 @@ export const SettlementModal: React.FC<SettlementModalProps> = ({
               {/* TAB 1: PREVIEW */}
               {activeTab === 'PREVIEW' && (
                 <div className="space-y-6">
+                  {/* Settlement Countdown Card */}
+                  <div className="p-4 rounded-xl bg-slate-950/80 border border-slate-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                    <div className="space-y-1">
+                      <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-2">
+                        <span>⏳ Settlement Window Countdown</span>
+                        <span
+                          className={`w-2 h-2 rounded-full ${
+                            countdown.isEnded ? 'bg-emerald-400' : 'bg-amber-400 animate-ping'
+                          }`}
+                        />
+                      </div>
+                      <div className="text-xs text-slate-400">
+                        Soroban contract requires end timestamp to elapse before multi-recipient payouts can unlock.
+                      </div>
+                    </div>
+                    <div className="text-right w-full sm:w-auto">
+                      <div
+                        className={`text-lg font-mono font-bold ${
+                          countdown.isEnded ? 'text-emerald-400' : 'text-cyan-400'
+                        }`}
+                      >
+                        {countdown.formatted}
+                      </div>
+                      <div className="text-[11px] text-slate-500 font-mono">
+                        {countdown.isEnded ? 'Status: Settlement Window Open' : 'Status: Tournament In Progress'}
+                      </div>
+                    </div>
+                  </div>
+
                   {/* Eligibility Status Banner */}
                   <div className={`p-4 rounded-xl border ${
                     isEligible
