@@ -1,6 +1,64 @@
 import React, { useEffect, useState } from 'react';
-import { X, Trophy, ShieldCheck, RefreshCw } from 'lucide-react';
+import { X, Trophy, ShieldCheck, RefreshCw, Download } from 'lucide-react';
 import { ApiClient, LeaderboardEntry, TournamentItem } from '../services/api';
+
+export interface ExportDataPayload {
+  tournamentId: number | string;
+  tournamentName: string;
+  exportedAt: string;
+  totalParticipants: number;
+  leaderboard: LeaderboardEntry[];
+}
+
+export function generateLeaderboardCSV(tournament: TournamentItem, leaderboard: LeaderboardEntry[]): string {
+  const headers = [
+    'Rank',
+    'PlayerWallet',
+    'CurrentScore',
+    'MatchesPlayed',
+    'VerificationStatus',
+    'VerifiedScore',
+    'CompletedAt',
+    'VerifiedAt',
+    'ProofHash',
+  ];
+
+  const rows = leaderboard.map((entry) => [
+    entry.rank,
+    `"${entry.playerWallet}"`,
+    entry.currentScore,
+    entry.matchesPlayed,
+    entry.finalVerifiedResult ? 'VERIFIED' : 'PENDING',
+    entry.finalVerifiedResult?.score ?? '',
+    entry.finalVerifiedResult?.completedAt ? `"${entry.finalVerifiedResult.completedAt}"` : '',
+    entry.finalVerifiedResult?.verifiedAt ? `"${entry.finalVerifiedResult.verifiedAt}"` : '',
+    entry.finalVerifiedResult?.proofHash ? `"${entry.finalVerifiedResult.proofHash}"` : '',
+  ]);
+
+  return [headers.join(','), ...rows.map((r) => r.join(','))].join('\n');
+}
+
+export function generateLeaderboardJSON(tournament: TournamentItem, leaderboard: LeaderboardEntry[]): ExportDataPayload {
+  return {
+    tournamentId: tournament.id,
+    tournamentName: tournament.name,
+    exportedAt: new Date().toISOString(),
+    totalParticipants: leaderboard.length,
+    leaderboard,
+  };
+}
+
+export function triggerDownload(content: string, filename: string, mimeType: string): void {
+  const blob = new Blob([content], { type: mimeType });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
 
 interface LeaderboardModalProps {
   tournament: TournamentItem | null;
@@ -33,6 +91,18 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
     }
   };
 
+  const handleExportCSV = () => {
+    if (!tournament) return;
+    const csvContent = generateLeaderboardCSV(tournament, leaderboard);
+    triggerDownload(csvContent, `tournament-${tournament.id}-leaderboard.csv`, 'text/csv;charset=utf-8;');
+  };
+
+  const handleExportJSON = () => {
+    if (!tournament) return;
+    const jsonPayload = generateLeaderboardJSON(tournament, leaderboard);
+    triggerDownload(JSON.stringify(jsonPayload, null, 2), `tournament-${tournament.id}-leaderboard.json`, 'application/json');
+  };
+
   if (!isOpen || !tournament) return null;
 
   return (
@@ -53,7 +123,7 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
         className="glass-panel"
         style={{
           width: '100%',
-          maxWidth: '720px',
+          maxWidth: '780px',
           padding: '32px',
           position: 'relative',
           maxHeight: '90vh',
@@ -76,26 +146,70 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
           <X size={20} />
         </button>
 
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px', flexWrap: 'wrap', gap: '8px' }}>
           <h2 style={{ fontSize: '1.5rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '8px' }}>
             <Trophy size={22} style={{ color: 'var(--gold-glow)' }} />
             Tournament Leaderboard
           </h2>
-          <button
-            onClick={loadData}
-            style={{
-              background: 'none',
-              border: 'none',
-              color: 'var(--cyan-glow)',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '4px',
-              fontSize: '0.8rem',
-            }}
-          >
-            <RefreshCw size={14} className={loading ? 'spin' : ''} /> Refresh
-          </button>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <button
+              onClick={handleExportCSV}
+              disabled={leaderboard.length === 0}
+              title="Export leaderboard as CSV"
+              style={{
+                background: 'rgba(255, 255, 255, 0.05)',
+                border: '1px solid var(--border-glass)',
+                borderRadius: '6px',
+                padding: '6px 10px',
+                color: 'var(--text-main)',
+                cursor: leaderboard.length === 0 ? 'not-allowed' : 'pointer',
+                opacity: leaderboard.length === 0 ? 0.5 : 1,
+                display: 'flex',
+                alignItems: 'center',
+                gap: '4px',
+                fontSize: '0.75rem',
+                fontFamily: 'var(--font-mono)',
+              }}
+            >
+              <Download size={13} style={{ color: 'var(--cyan-glow)' }} /> CSV
+            </button>
+            <button
+              onClick={handleExportJSON}
+              disabled={leaderboard.length === 0}
+              title="Export leaderboard telemetry as JSON"
+              style={{
+                background: 'rgba(255, 255, 255, 0.05)',
+                border: '1px solid var(--border-glass)',
+                borderRadius: '6px',
+                padding: '6px 10px',
+                color: 'var(--text-main)',
+                cursor: leaderboard.length === 0 ? 'not-allowed' : 'pointer',
+                opacity: leaderboard.length === 0 ? 0.5 : 1,
+                display: 'flex',
+                alignItems: 'center',
+                gap: '4px',
+                fontSize: '0.75rem',
+                fontFamily: 'var(--font-mono)',
+              }}
+            >
+              <Download size={13} style={{ color: 'var(--gold-glow)' }} /> JSON
+            </button>
+            <button
+              onClick={loadData}
+              style={{
+                background: 'none',
+                border: 'none',
+                color: 'var(--cyan-glow)',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '4px',
+                fontSize: '0.8rem',
+              }}
+            >
+              <RefreshCw size={14} className={loading ? 'spin' : ''} /> Refresh
+            </button>
+          </div>
         </div>
 
         <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginBottom: '16px' }}>
