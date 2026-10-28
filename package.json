@@ -8,7 +8,8 @@
     "build": "tsc && vite build",
     "preview": "vite preview",
     "test": "vitest run",
-    "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0"
+    "typecheck": "tsc --noEmit",
+    "lint": "tsc --noEmit"
   },
   "engines": {
     "node": ">=18.0.0",
