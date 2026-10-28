@@ -20,7 +20,19 @@ export const Navbar: React.FC<NavbarProps> = ({
   const [loading, setLoading] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
 
-  const handleConnect = async () => {
+  const handleConnectFreighter = async () => {
+    setLoading(true);
+    try {
+      const newWallet = await StellarWalletService.connectFreighter();
+      onWalletChange(newWallet);
+    } catch (err: any) {
+      alert(err.message || 'Could not connect to Freighter wallet.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleConnectEphemeral = async () => {
     setLoading(true);
     try {
       const newWallet = await StellarWalletService.createAndFundTestnetWallet();
@@ -38,6 +50,7 @@ export const Navbar: React.FC<NavbarProps> = ({
       status: 'DISCONNECTED',
       network: 'Stellar Testnet',
       balanceXLM: 0,
+      walletType: 'FREIGHTER',
       isEphemeral: false,
     });
     setShowDropdown(false);
@@ -237,15 +250,27 @@ export const Navbar: React.FC<NavbarProps> = ({
             )}
           </div>
         ) : (
-          <button
-            className="btn-primary"
-            onClick={handleConnect}
-            disabled={loading}
-            style={{ padding: '8px 18px', fontSize: '0.85rem' }}
-          >
-            {loading ? <RefreshCw size={16} className="spin" /> : <Key size={16} />}
-            {loading ? 'Connecting & Funding...' : 'Connect Stellar Wallet'}
-          </button>
+          <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+            <button
+              className="btn-primary"
+              onClick={handleConnectFreighter}
+              disabled={loading}
+              style={{ padding: '8px 14px', fontSize: '0.85rem' }}
+              title="Connect standard non-custodial Freighter browser extension"
+            >
+              {loading ? <RefreshCw size={16} className="spin" /> : <Wallet size={16} />}
+              Connect Freighter
+            </button>
+            <button
+              className="btn-secondary"
+              onClick={handleConnectEphemeral}
+              disabled={loading}
+              style={{ padding: '8px 12px', fontSize: '0.8rem' }}
+              title="Instant Friendbot-funded testnet keypair for demo and testing"
+            >
+              <Key size={14} /> Quick Demo Wallet
+            </button>
+          </div>
         )}
       </div>
     </nav>
