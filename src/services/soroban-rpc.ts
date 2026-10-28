@@ -34,7 +34,7 @@ export interface TxStatusResponse {
 
 export class SorobanRpcService {
   private static RPC_URL =
-    import.meta.env?.VITE_SOROBAN_RPC_URL || 'https://soroban-testnet.stellar.org';
+    (import.meta as any)?.env?.VITE_SOROBAN_RPC_URL || 'https://soroban-testnet.stellar.org';
 
   /**
    * Helper to execute JSON-RPC 2.0 calls against Soroban RPC endpoint.

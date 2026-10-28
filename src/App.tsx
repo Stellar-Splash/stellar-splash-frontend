@@ -13,6 +13,7 @@ import { TournamentRankingsModal } from './components/TournamentRankingsModal';
 import { SettlementModal } from './components/SettlementModal';
 import { PlayerPayoutHistoryModal } from './components/PlayerPayoutHistoryModal';
 import { HowItWorks } from './components/HowItWorks';
+import { NetworkStatusBar } from './components/NetworkStatusBar';
 import { ApiClient, TournamentItem } from './services/api';
 import { StellarWalletService, WalletState } from './services/stellar-wallet';
 
@@ -305,6 +306,8 @@ export const App: React.FC = () => {
           Stellar Splash &bull; Verifiable Gaming & Prize Settlement &bull; Powered by Stellar Testnet &amp; Soroban
         </p>
       </footer>
+
+      <NetworkStatusBar />
     </div>
   );
 };
