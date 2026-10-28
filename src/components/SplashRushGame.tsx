@@ -246,16 +246,21 @@ export const SplashRushGame: React.FC<SplashRushProps> = ({
     if (onFinish) onFinish();
   };
 
-  // Canvas Click Handler
-  const handleCanvasClick = (e: React.MouseEvent<HTMLCanvasElement>) => {
+  // Universal Interaction Handler (Mouse & Mobile Touch) with Display Scaling
+  const processInteraction = (clientX: number, clientY: number) => {
     if (gameState !== 'PLAYING') return;
 
     const canvas = canvasRef.current;
     if (!canvas) return;
 
     const rect = canvas.getBoundingClientRect();
-    const clickX = e.clientX - rect.left;
-    const clickY = e.clientY - rect.top;
+    if (rect.width === 0 || rect.height === 0) return;
+
+    // Viewport display scaling normalization for high-DPI and mobile displays
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    const clickX = (clientX - rect.left) * scaleX;
+    const clickY = (clientY - rect.top) * scaleY;
 
     let hitFound = false;
 
@@ -337,6 +342,17 @@ export const SplashRushGame: React.FC<SplashRushProps> = ({
       setCombo(0);
       setMultiplier(1);
       setMisses((m) => m + 1);
+    }
+  };
+
+  const handleCanvasClick = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    processInteraction(e.clientX, e.clientY);
+  };
+
+  const handleCanvasTouch = (e: React.TouchEvent<HTMLCanvasElement>) => {
+    if (e.touches && e.touches.length > 0) {
+      const touch = e.touches[0];
+      processInteraction(touch.clientX, touch.clientY);
     }
   };
 
@@ -564,7 +580,14 @@ export const SplashRushGame: React.FC<SplashRushProps> = ({
           width={790}
           height={460}
           onClick={handleCanvasClick}
-          style={{ width: '100%', height: '100%', cursor: gameState === 'PLAYING' ? 'crosshair' : 'default' }}
+          onTouchStart={handleCanvasTouch}
+          style={{
+            width: '100%',
+            height: '100%',
+            cursor: gameState === 'PLAYING' ? 'crosshair' : 'default',
+            touchAction: 'none',
+            userSelect: 'none',
+          }}
         />
 
         {/* READY Overlay */}
