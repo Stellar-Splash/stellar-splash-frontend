@@ -259,4 +259,34 @@ export class AudioSynthService {
     osc.start(now);
     osc.stop(now + 0.04);
   }
+
+  /**
+   * Celebratory victory chime for tournament wins and high scores.
+   */
+  public static playSuccess(): void {
+    if (this.muted) return;
+    const ctx = this.getContext();
+    if (!ctx) return;
+
+    const notes = [523.25, 659.25, 783.99, 1046.5]; // C5, E5, G5, C6
+    const now = ctx.currentTime;
+
+    notes.forEach((freq, idx) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(freq, now + idx * 0.1);
+
+      const vol = this.masterVolume * 0.4;
+      gain.gain.setValueAtTime(vol, now + idx * 0.1);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.1 + 0.3);
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      osc.start(now + idx * 0.1);
+      osc.stop(now + idx * 0.1 + 0.3);
+    });
+  }
 }
