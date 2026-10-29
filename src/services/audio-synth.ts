@@ -5,10 +5,78 @@
 
 export type SoundEffectType = 'hit' | 'combo' | 'hazard' | 'buzzer' | 'tick' | 'victory';
 
+const AUDIO_STORAGE_KEY = 'stellar_splash_audio_settings';
+
+function loadInitialAudioSettings(): { muted: boolean; volume: number } {
+  if (typeof window === 'undefined' || !window.localStorage) {
+    return { muted: false, volume: 0.5 };
+  }
+  try {
+    const raw = window.localStorage.getItem(AUDIO_STORAGE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      return {
+        muted: typeof parsed.muted === 'boolean' ? parsed.muted : false,
+        volume: typeof parsed.volume === 'number' ? Math.max(0, Math.min(1, parsed.volume)) : 0.5,
+      };
+    }
+  } catch {
+    // Ignore JSON parse errors
+  }
+  return { muted: false, volume: 0.5 };
+}
+
 export class AudioSynthService {
   private static audioCtx: AudioContext | null = null;
-  private static muted: boolean = false;
-  private static masterVolume: number = 0.5;
+  private static STORAGE_KEY = AUDIO_STORAGE_KEY;
+  private static listeners: Set<(muted: boolean, volume: number) => void> = new Set();
+  private static initialSettings = loadInitialAudioSettings();
+  private static muted: boolean = AudioSynthService.initialSettings.muted;
+  private static masterVolume: number = AudioSynthService.initialSettings.volume;
+
+  private static persistSettings(): void {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      try {
+        window.localStorage.setItem(
+          this.STORAGE_KEY,
+          JSON.stringify({ muted: this.muted, volume: this.masterVolume })
+        );
+      } catch {
+        // Ignore quota errors
+      }
+    }
+    this.listeners.forEach((fn) => fn(this.muted, this.masterVolume));
+  }
+
+  public static addAudioChangeListener(listener: (muted: boolean, volume: number) => void): () => void {
+    this.listeners.add(listener);
+    return () => {
+      this.listeners.delete(listener);
+    };
+  }
+
+  public static isMuted(): boolean {
+    return this.muted;
+  }
+
+  public static setMuted(muted: boolean): void {
+    this.muted = muted;
+    this.persistSettings();
+  }
+
+  public static toggleMuted(): boolean {
+    this.setMuted(!this.muted);
+    return this.muted;
+  }
+
+  public static getVolume(): number {
+    return this.masterVolume;
+  }
+
+  public static setVolume(volume: number): void {
+    this.masterVolume = Math.max(0, Math.min(1, volume));
+    this.persistSettings();
+  }
 
   private static getContext(): AudioContext | null {
     if (typeof window === 'undefined') return null;
@@ -22,22 +90,6 @@ export class AudioSynthService {
       this.audioCtx.resume().catch(() => {});
     }
     return this.audioCtx;
-  }
-
-  public static isMuted(): boolean {
-    return this.muted;
-  }
-
-  public static setMuted(muted: boolean): void {
-    this.muted = muted;
-  }
-
-  public static getVolume(): number {
-    return this.masterVolume;
-  }
-
-  public static setVolume(volume: number): void {
-    this.masterVolume = Math.max(0, Math.min(1, volume));
   }
 
   /**

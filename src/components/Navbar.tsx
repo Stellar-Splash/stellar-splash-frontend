@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Wallet, Globe, LogOut, RefreshCw, Key } from 'lucide-react';
 import { WalletState, StellarWalletService } from '../services/stellar-wallet';
+import { AudioSettingsControl } from './AudioSettingsControl';
 
 interface NavbarProps {
   wallet: WalletState;
@@ -131,6 +132,9 @@ export const Navbar: React.FC<NavbarProps> = ({
 
       {/* Network & Wallet Section */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+        {/* Audio Volume & Mute Control */}
+        <AudioSettingsControl />
+
         {/* Network Badge */}
         <div
           style={{
