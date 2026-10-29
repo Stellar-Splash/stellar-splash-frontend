@@ -178,3 +178,22 @@ The application will launch on `http://localhost:3000` and proxy backend request
 npm run build
 ```
 Deploy the resulting `dist/` directory to Netlify or any static hosting provider.
+
+
+---
+
+## 🏆 Hackathon Judge Quick Evaluation & Audit Tools
+
+Judges can evaluate the full system and audit compliance using the automated toolchain:
+
+| Evaluation Guide / Tool | Command / Document |
+| :--- | :--- |
+| **Judge 5-Minute Evaluation Guide** | [docs/JUDGE_EVALUATION_GUIDE.md](docs/JUDGE_EVALUATION_GUIDE.md) |
+| **Hackathon Submission Whitepaper** | [docs/HACKATHON_WHITEPAPER.md](docs/HACKATHON_WHITEPAPER.md) |
+| **Stellar Integration Architecture** | [docs/STELLAR_INTEGRATION_ARCHITECTURE.md](docs/STELLAR_INTEGRATION_ARCHITECTURE.md) |
+| **Graphics & Audio Optimization** | [docs/GRAPHICS_AND_PHYSICS_OPTIMIZATION.md](docs/GRAPHICS_AND_PHYSICS_OPTIMIZATION.md) |
+| **Run Automated Judge Demo Scenario** | `node scripts/run-judge-demo.cjs` |
+| **Run Bundle Size Audit** | `npm run audit:bundle` |
+| **Verify StellarExpert Links** | `npm run verify:links` |
+| **Run Accessibility Linter** | `npm run audit:a11y` |
+| **Full Local CI Pipeline Verification** | `npm run verify:pipeline` |
