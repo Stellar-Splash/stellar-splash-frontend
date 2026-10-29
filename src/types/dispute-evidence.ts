@@ -13,3 +13,4 @@ export interface DisputeFilingRequest {
   evidenceUri?: string;
   stakedBondXlm: number; // Required dispute staking bond
 }
+

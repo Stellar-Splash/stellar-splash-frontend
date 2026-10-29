@@ -17,3 +17,4 @@ describe('JudgeDemoService', () => {
     expect(sponsorBoost?.targetPrizeXlm).toBe(250);
   });
 });
+

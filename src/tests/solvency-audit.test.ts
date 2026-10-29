@@ -35,3 +35,4 @@ describe('SolvencyAuditService', () => {
     expect(report.unreservedSurplusXlm).toBe(-200);
   });
 });
+

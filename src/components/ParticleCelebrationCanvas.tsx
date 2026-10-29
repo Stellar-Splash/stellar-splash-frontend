@@ -100,3 +100,4 @@ export const ParticleCelebrationCanvas: React.FC<ParticleCelebrationCanvasProps>
     />
   );
 };
+

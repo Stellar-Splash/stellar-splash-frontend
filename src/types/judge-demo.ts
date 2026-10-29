@@ -6,3 +6,4 @@ export interface JudgeDemoScenario {
   simulatedPlayersCount: number;
   steps: string[];
 }
+

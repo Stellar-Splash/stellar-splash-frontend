@@ -92,3 +92,4 @@ export const SolvencyAuditModal: React.FC<SolvencyAuditModalProps> = ({
     </div>
   );
 };
+

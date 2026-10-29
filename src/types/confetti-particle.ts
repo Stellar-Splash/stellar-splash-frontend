@@ -10,3 +10,4 @@ export interface ConfettiParticle {
   opacity: number;
   decay: number;
 }
+
