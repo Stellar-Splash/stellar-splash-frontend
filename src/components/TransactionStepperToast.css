@@ -1,0 +1,168 @@
+.tx-stepper-toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: #0f172a;
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  border-radius: 14px;
+  padding: 16px 20px;
+  width: 360px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7), 0 0 20px rgba(56, 189, 248, 0.2);
+  z-index: 9998;
+  color: #f8fafc;
+  animation: toastSlideUp 0.3s ease-out;
+}
+
+@keyframes toastSlideUp {
+  0% { transform: translateY(20px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+.tx-stepper-toast.confirmed {
+  border-color: rgba(34, 197, 94, 0.6);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7), 0 0 20px rgba(34, 197, 94, 0.25);
+}
+
+.tx-stepper-toast.reverted {
+  border-color: rgba(239, 68, 68, 0.6);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7), 0 0 20px rgba(239, 68, 68, 0.25);
+}
+
+.tx-stepper-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.tx-stepper-title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tx-stepper-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #38bdf8;
+  box-shadow: 0 0 8px #38bdf8;
+  animation: pulse 1.5s infinite;
+}
+
+.tx-stepper-toast.confirmed .tx-stepper-indicator {
+  background: #22c55e;
+  box-shadow: 0 0 8px #22c55e;
+  animation: none;
+}
+
+.tx-stepper-toast.reverted .tx-stepper-indicator {
+  background: #ef4444;
+  box-shadow: 0 0 8px #ef4444;
+  animation: none;
+}
+
+.tx-stepper-action {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.tx-stepper-dismiss {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  font-size: 1.25rem;
+  cursor: pointer;
+}
+
+.tx-stepper-dismiss:hover {
+  color: #ffffff;
+}
+
+.tx-stepper-progress-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 12px 0;
+  position: relative;
+}
+
+.tx-step-dot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  z-index: 2;
+}
+
+.dot-circle {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #1e293b;
+  border: 2px solid #475569;
+  transition: all 0.3s ease;
+}
+
+.tx-step-dot.active .dot-circle {
+  border-color: #38bdf8;
+  background: #0284c7;
+  box-shadow: 0 0 10px #38bdf8;
+}
+
+.tx-step-dot.completed .dot-circle {
+  border-color: #22c55e;
+  background: #22c55e;
+}
+
+.tx-step-dot.failed .dot-circle {
+  border-color: #ef4444;
+  background: #ef4444;
+}
+
+.dot-label {
+  font-size: 0.65rem;
+  color: #94a3b8;
+}
+
+.tx-step-dot.active .dot-label {
+  color: #38bdf8;
+  font-weight: 600;
+}
+
+.tx-step-line {
+  flex: 1;
+  height: 2px;
+  background: #334155;
+  margin: 0 4px;
+  transform: translateY(-8px);
+}
+
+.tx-step-line.filled {
+  background: #22c55e;
+}
+
+.tx-stepper-footer {
+  margin-top: 10px;
+  text-align: right;
+}
+
+.tx-explorer-link {
+  font-size: 0.75rem;
+  color: #38bdf8;
+  text-decoration: none;
+}
+
+.tx-explorer-link:hover {
+  text-decoration: underline;
+}
+
+.tx-stepper-error-msg {
+  font-size: 0.75rem;
+  color: #f87171;
+  background: rgba(239, 68, 68, 0.15);
+  padding: 6px 10px;
+  border-radius: 6px;
+  margin-top: 8px;
+}
