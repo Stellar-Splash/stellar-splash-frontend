@@ -298,3 +298,4 @@ export * from './replay-bundle';
 export * from './player-profile';
 export * from './dispute-resolution';
 export * from './player-tier';
+export * from './solvency';

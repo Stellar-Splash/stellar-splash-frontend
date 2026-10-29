@@ -137,8 +137,7 @@ export const TransactionHistoryTable: React.FC<TransactionHistoryTableProps> = (
                 <td style={{ padding: '0.75rem 1rem' }}>
                   <StellarExpertLink
                     type="tx"
-                    value={tx.txHash}
-                    network={network}
+                    id={tx.txHash}
                     label="View Tx"
                   />
                 </td>
