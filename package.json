@@ -14,7 +14,8 @@
     "format": "npx prettier --write \"src/**/*.{ts,tsx,css,json}\"",
     "precommit": "npm run typecheck && npm test",
     "prepare": "git config core.hooksPath .githooks || true",
-    "verify:all": "node scripts/verify-all.cjs"
+    "verify:all": "node scripts/verify-all.cjs",
+    "analyze": "node scripts/analyze-bundle.cjs"
   },
   "engines": {
     "node": ">=18.0.0",
