@@ -72,6 +72,7 @@ export const SplashRushGame: React.FC<SplashRushProps> = ({
   const animFrameRef = useRef<number>(0);
   const lastSpawnRef = useRef<number>(0);
   const timerIntervalRef = useRef<any>(null);
+  const traumaRef = useRef<number>(0);
 
   const [isMuted, setIsMuted] = useState<boolean>(AudioSynthService.isMuted());
 
@@ -257,8 +258,8 @@ export const SplashRushGame: React.FC<SplashRushProps> = ({
     if (rect.width === 0 || rect.height === 0) return;
 
     // Viewport display scaling normalization for high-DPI and mobile displays
-    const scaleX = canvas.width / rect.width;
-    const scaleY = canvas.height / rect.height;
+    const scaleX = 790 / rect.width;
+    const scaleY = 460 / rect.height;
     const clickX = (clientX - rect.left) * scaleX;
     const clickY = (clientY - rect.top) * scaleY;
 
@@ -273,7 +274,8 @@ export const SplashRushGame: React.FC<SplashRushProps> = ({
         targetsRef.current.splice(i, 1);
 
         if (t.type === 'HAZARD') {
-          // Penalty
+          // Penalty with camera trauma shake
+          traumaRef.current = Math.min(traumaRef.current + 0.65, 1.0);
           AudioSynthService.playHazardPenalty();
           addParticles(t.x, t.y, '#f43f5e', 12);
           addFloatingText(t.x, t.y, '-50 PENALTY', '#f43f5e');
@@ -306,6 +308,9 @@ export const SplashRushGame: React.FC<SplashRushProps> = ({
           setHits((h) => h + 1);
 
           const color = t.type === 'GOLDEN' ? '#ffb800' : t.type === 'BURST' ? '#a855f7' : '#00f0ff';
+          if (t.type === 'GOLDEN' || newCombo % 5 === 0) {
+            traumaRef.current = Math.min(traumaRef.current + 0.35, 0.85);
+          }
           AudioSynthService.playTargetHit(newCombo);
           if (newCombo % 5 === 0) {
             AudioSynthService.playComboStreak(newCombo);
@@ -363,29 +368,51 @@ export const SplashRushGame: React.FC<SplashRushProps> = ({
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
+    const dpr = Math.min(typeof window !== 'undefined' ? window.devicePixelRatio || 1 : 1, 2);
+    const logicalW = 790;
+    const logicalH = 460;
+
+    if (canvas.width !== logicalW * dpr || canvas.height !== logicalH * dpr) {
+      canvas.width = logicalW * dpr;
+      canvas.height = logicalH * dpr;
+    }
+
     const render = (time: number) => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.save();
+      ctx.scale(dpr, dpr);
+
+      // Dynamic camera trauma screen shake
+      const trauma = traumaRef.current;
+      if (trauma > 0) {
+        const shake = trauma * trauma;
+        const ox = (Math.random() * 2 - 1) * 8 * shake;
+        const oy = (Math.random() * 2 - 1) * 8 * shake;
+        ctx.translate(ox, oy);
+        traumaRef.current = Math.max(0, trauma - 0.04);
+      }
+
+      ctx.clearRect(0, 0, logicalW, logicalH);
 
       // Background grid
       ctx.strokeStyle = 'rgba(0, 240, 255, 0.05)';
       ctx.lineWidth = 1;
-      for (let x = 0; x < canvas.width; x += 40) {
+      for (let x = 0; x < logicalW; x += 40) {
         ctx.beginPath();
         ctx.moveTo(x, 0);
-        ctx.lineTo(x, canvas.height);
+        ctx.lineTo(x, logicalH);
         ctx.stroke();
       }
-      for (let y = 0; y < canvas.height; y += 40) {
+      for (let y = 0; y < logicalH; y += 40) {
         ctx.beginPath();
         ctx.moveTo(0, y);
-        ctx.lineTo(canvas.width, y);
+        ctx.lineTo(logicalW, y);
         ctx.stroke();
       }
 
       if (gameState === 'PLAYING') {
         // Spawn logic
         if (time - lastSpawnRef.current > 450 && targetsRef.current.length < 8) {
-          spawnTarget(canvas.width, canvas.height);
+          spawnTarget(logicalW, logicalH);
           lastSpawnRef.current = time;
         }
 
@@ -397,8 +424,8 @@ export const SplashRushGame: React.FC<SplashRushProps> = ({
           t.life -= 1;
 
           // Bounce off bounds
-          if (t.x < t.radius || t.x > canvas.width - t.radius) t.speedX *= -1;
-          if (t.y < t.radius || t.y > canvas.height - t.radius) t.speedY *= -1;
+          if (t.x < t.radius || t.x > logicalW - t.radius) t.speedX *= -1;
+          if (t.y < t.radius || t.y > logicalH - t.radius) t.speedY *= -1;
 
           if (t.life <= 0) {
             targetsRef.current.splice(i, 1);
@@ -483,6 +510,7 @@ export const SplashRushGame: React.FC<SplashRushProps> = ({
         ctx.restore();
       }
 
+      ctx.restore();
       animFrameRef.current = requestAnimationFrame(render);
     };
 
