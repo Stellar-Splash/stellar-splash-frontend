@@ -13,7 +13,8 @@
     "format:check": "npx prettier --check \"src/**/*.{ts,tsx,css,json}\"",
     "format": "npx prettier --write \"src/**/*.{ts,tsx,css,json}\"",
     "precommit": "npm run typecheck && npm test",
-    "prepare": "git config core.hooksPath .githooks || true"
+    "prepare": "git config core.hooksPath .githooks || true",
+    "verify:all": "node scripts/verify-all.cjs"
   },
   "engines": {
     "node": ">=18.0.0",
