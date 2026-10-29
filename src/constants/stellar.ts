@@ -17,6 +17,7 @@ export const STELLAR_CONSTANTS = {
   STROOPS_PER_XLM: 10_000_000n,
   DEFAULT_FEE_STROOPS: '1000',
   TOTAL_BASIS_POINTS: 10_000,
+  FRIENDBOT_URL: 'https://friendbot.stellar.org',
 } as const;
 
 export const buildExplorerTxUrl = (txHash: string): string =>

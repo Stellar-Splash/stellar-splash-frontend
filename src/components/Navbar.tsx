@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Wallet, Globe, LogOut, RefreshCw, Key } from 'lucide-react';
 import { WalletState, StellarWalletService } from '../services/stellar-wallet';
 import { AudioSettingsControl } from './AudioSettingsControl';
+import { GasBudgetWarning } from './GasBudgetWarning';
 
 interface NavbarProps {
   wallet: WalletState;
@@ -166,9 +167,10 @@ export const Navbar: React.FC<NavbarProps> = ({
           </button>
         )}
 
-        {/* Wallet Button */}
+        {/* Wallet Button & Gas Budget Warning */}
         {wallet.status === 'CONNECTED' && wallet.publicKey ? (
-          <div style={{ position: 'relative' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', position: 'relative' }}>
+            <GasBudgetWarning balanceXLM={wallet.balanceXLM} publicKey={wallet.publicKey} compact={true} />
             <button
               className="btn-secondary"
               onClick={() => setShowDropdown(!showDropdown)}
