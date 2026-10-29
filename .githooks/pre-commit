@@ -1,0 +1,22 @@
+#!/bin/sh
+# Git pre-commit hook for Stellar Splash Frontend
+# Ensures TypeScript types check cleanly and all test suites pass before commit
+
+echo "🔍 Running pre-commit validation for stellar-splash-frontend..."
+
+echo "➡️ Checking TypeScript compilation..."
+npm run typecheck
+if [ $? -ne 0 ]; then
+  echo "❌ TypeScript typecheck failed! Aborting commit."
+  exit 1
+fi
+
+echo "➡️ Running Vitest test suite..."
+npm test
+if [ $? -ne 0 ]; then
+  echo "❌ Vitest test suite failed! Aborting commit."
+  exit 1
+fi
+
+echo "✅ All frontend pre-commit checks passed successfully!"
+exit 0
