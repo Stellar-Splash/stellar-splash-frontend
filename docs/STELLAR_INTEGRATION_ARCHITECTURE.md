@@ -18,3 +18,4 @@ Stellar Splash abstracts wallet connection through a unified, reactive adapter l
 ## 4. StellarExpert Explorer Deep-Linking
 - Every contract address, transaction hash, settlement ledger sequence, and player public key links directly to testnet StellarExpert (`https://stellar.expert/explorer/testnet/`).
 - Increases trust, auditability, and transparency for judges and players alike.
+

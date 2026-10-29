@@ -15,3 +15,4 @@
 1. **Interactive Replay Scrubber**: Open `/replay/:id` or click "Inspect Replay" to review frame-by-frame physics ticks and Shannon entropy calculations in real time.
 2. **On-Chain Solvency Audit**: Click the "Solvency Audit" pill in the header to view live cryptographic proof comparing contract vault reserves against open tournament liabilities.
 3. **Channel Account Parallel Settlements**: Check engine logs or Postman endpoints to observe parallel payouts without sequence number clashes (`txBAD_SEQ`).
+

@@ -23,3 +23,4 @@ describe('Frontend Documentation Integrity', () => {
     expect(checklist).toContain('Channel account');
   });
 });
+

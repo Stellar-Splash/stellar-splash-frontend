@@ -26,3 +26,4 @@ if (require.main === module) {
 }
 
 module.exports = { DEMO_CONFIG, runJudgeDemo };
+

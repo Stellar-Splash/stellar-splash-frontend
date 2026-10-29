@@ -25,3 +25,4 @@ Traditional Web3 gaming suffers from three critical bottlenecks:
 | **Stellar Horizon / RPC** | Real-time event streaming and balance indexing |
 | **Friendbot API** | Instant one-click testnet judge funding without leaving the browser |
 | **StellarExpert** | Transparent deep links for all transactions, contracts, and ledger settlements |
+

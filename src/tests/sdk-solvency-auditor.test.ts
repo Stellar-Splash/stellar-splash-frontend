@@ -21,3 +21,4 @@ describe('SDK SolvencyAuditor', () => {
     expect(audit.deltaXlm).toBe(0);
   });
 });
+

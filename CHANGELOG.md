@@ -2,6 +2,14 @@
 
 All notable changes to `stellar-splash-frontend` are documented in this file.
 
+## [1.0.1] - 2026-10-29
+
+### Fixed
+- **CI Pipeline Typechecking**: Added `@types/node` to resolve TypeScript resolution in `docs-integrity.test.ts`.
+- **Netlify SPA Deployment**: Added `netlify.toml` and `public/_redirects` with 200 rewrite fallback for deep routes (`/leaderboard`, `/tournament/:id`, `/replay/:id`).
+- **Production Headers**: Configured HSTS, X-Frame-Options, X-Content-Type-Options, and referrer policies in `netlify.toml`.
+- **Repository Metadata**: Enhanced GitHub description, live Netlify URL, and added tags (`hackathon`, `web3-gaming`, `freighter`, `esports`).
+
 ## [1.0.0] - 2026-10-29
 
 ### Added

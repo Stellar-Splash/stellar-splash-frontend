@@ -16,3 +16,4 @@ describe('Judge Demo Orchestrator Configuration', () => {
     expect(DEMO_CONFIG.tournamentId).toBe(101);
   });
 });
+

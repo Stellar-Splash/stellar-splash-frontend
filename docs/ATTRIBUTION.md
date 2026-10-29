@@ -18,3 +18,4 @@ Stellar Splash is built with open source software and protocols. We gratefully a
 - **Node.js**: OpenJS Foundation
 - **Express**: MIT License
 - **Prometheus Client**: Apache License 2.0
+

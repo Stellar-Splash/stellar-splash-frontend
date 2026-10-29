@@ -51,3 +51,4 @@ if (result.valid) {
 const audit = SolvencyAuditor.verifySolvency(5000, 4800);
 console.log(`Solvent: ${audit.isSolvent}, Surplus: +${audit.deltaXlm} XLM`);
 ```
+

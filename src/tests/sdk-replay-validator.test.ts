@@ -22,3 +22,4 @@ describe('SDK ReplayValidator', () => {
     expect(res.entropy).toBeGreaterThan(1.0);
   });
 });
+

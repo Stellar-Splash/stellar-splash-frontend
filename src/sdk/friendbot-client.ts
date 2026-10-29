@@ -16,3 +16,4 @@ export class FriendbotClient {
     return true;
   }
 }
+

@@ -36,3 +36,4 @@ export class SplashContractClient {
     return false;
   }
 }
+

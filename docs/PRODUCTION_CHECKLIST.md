@@ -20,3 +20,4 @@
 - [x] Lighthouse accessibility (a11y) score $> 95$.
 - [x] Production bundle chunk budget enforced ($< 500\text{ KB}$).
 - [x] SPA router fallback configured in `nginx.conf`.
+

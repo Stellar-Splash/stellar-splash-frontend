@@ -18,3 +18,4 @@ To eliminate heavy sound asset downloads:
 ## 3. Mobile Touch & Responsive Design
 - Virtual Dual-Zone Touch Joystick overlays automatically when touch devices or viewport widths $< 768\text{px}$ are detected.
 - Haptic feedback integration (Vibration API) on mobile devices upon collecting XLM tokens or sustaining obstacle damage.
+

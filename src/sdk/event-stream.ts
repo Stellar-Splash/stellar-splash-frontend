@@ -20,3 +20,4 @@ export class EventStreamClient<T = unknown> {
     return this.listeners.length;
   }
 }
+

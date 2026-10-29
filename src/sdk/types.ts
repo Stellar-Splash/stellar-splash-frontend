@@ -36,3 +36,4 @@ export interface SolvencyAuditResult {
   deltaXlm: number;
   timestamp: string;
 }
+

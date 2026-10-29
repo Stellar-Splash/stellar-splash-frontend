@@ -46,3 +46,4 @@
 - **Q1 2027**: Mainnet deployment on Stellar Protocol 22.
 - **Q2 2027**: Mobile SDK for iOS/Android (Unity and Godot plugins).
 - **Q3 2027**: Community tournament creator DAO with governance voting.
+

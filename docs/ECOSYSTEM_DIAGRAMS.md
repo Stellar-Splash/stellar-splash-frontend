@@ -38,3 +38,4 @@ stateDiagram-v2
     Cancelled --> [*] : 100% Player Refund Claimed
     Settled --> [*] : SBT Badges Minted
 ```
+

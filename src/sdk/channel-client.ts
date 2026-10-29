@@ -25,3 +25,4 @@ export class ChannelAccountClient {
     return this.channels.length;
   }
 }
+

@@ -37,3 +37,4 @@ Welcome Judges! This guide allows you to test and audit every layer of Stellar S
 ### Step 5: Check Anti-Cheat Dispute Arbitration
 1. Navigate to `/arbitration` or click **"Dispute Settlement"**.
 2. Review the simulated cryptographic proof bundle, including SHA-256 tick hash and Shannon entropy score ($H = 2.45$).
+

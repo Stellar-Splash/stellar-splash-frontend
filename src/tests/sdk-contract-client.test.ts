@@ -30,3 +30,4 @@ describe('SDK SplashContractClient', () => {
     expect(paused).toBe(false);
   });
 });
+

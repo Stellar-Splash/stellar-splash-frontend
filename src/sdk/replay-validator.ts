@@ -32,3 +32,4 @@ export class ReplayValidator {
     return { valid: true, score: rawScore, entropy };
   }
 }
+

@@ -41,3 +41,4 @@
 - **Visual**: Showing Soulbound Token champion badge, GitHub organization with 300 improvements, and closing slide.
 - **Voiceover**:
   > "Winners receive their XLM instantly plus a non-transferable Soulbound Token badge minted on Soroban. Stellar Splash brings high-frequency competitive esports to Stellar with zero latency and full on-chain trust. Try the live demo today! Thank you!"
+
