@@ -1,0 +1,29 @@
+name: Lighthouse Performance & A11y
+
+on:
+  schedule:
+    - cron: '0 4 * * 1' # Weekly Monday
+  workflow_dispatch:
+
+jobs:
+  lighthouse:
+    name: Run Lighthouse CI Audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install & Build
+        run: |
+          npm ci
+          npm run build
+
+      - name: Run Accessibility Linter
+        run: node scripts/check-accessibility.cjs
+
+      - name: Run Bundle Size Audit
+        run: node scripts/bundle-size-audit.cjs
