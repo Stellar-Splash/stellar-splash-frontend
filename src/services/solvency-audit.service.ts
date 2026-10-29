@@ -1,5 +1,5 @@
 import { SolvencyAuditReport, SolvencyGrade } from '../types/solvency-audit';
-import { CONTRACT_ID } from '../constants';
+import { STELLAR_CONSTANTS } from '../constants/stellar';
 
 export class SolvencyAuditService {
   public static calculateGrade(coverageRatio: number): SolvencyGrade {
@@ -15,7 +15,7 @@ export class SolvencyAuditService {
     activeTournamentsCount: number;
     contractAddress?: string;
   }): SolvencyAuditReport {
-    const contract = params.contractAddress || CONTRACT_ID;
+    const contract = params.contractAddress || STELLAR_CONSTANTS.DEFAULT_CONTRACT_ID;
     const committed = Math.max(0, params.committedPrizesXlm);
     const balance = Math.max(0, params.vaultBalanceXlm);
 
