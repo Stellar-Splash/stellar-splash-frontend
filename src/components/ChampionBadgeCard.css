@@ -1,0 +1,95 @@
+.champion-badge-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(234, 179, 8, 0.3);
+  border-radius: 12px;
+  padding: 14px 18px;
+  color: #f8fafc;
+  transition: all 0.2s ease;
+}
+
+.champion-badge-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(234, 179, 8, 0.8);
+  box-shadow: 0 8px 24px rgba(234, 179, 8, 0.15);
+}
+
+.badge-hexagon-wrapper {
+  position: relative;
+  width: 50px;
+  height: 58px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.badge-hexagon-svg {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.hexagon-polygon {
+  fill: rgba(234, 179, 8, 0.15);
+  stroke: #eab308;
+  stroke-width: 4;
+}
+
+.champion-badge-card.diamond .hexagon-polygon {
+  fill: rgba(56, 189, 248, 0.15);
+  stroke: #38bdf8;
+}
+
+.badge-trophy-icon {
+  font-size: 1.5rem;
+  z-index: 2;
+}
+
+.badge-info {
+  flex: 1;
+}
+
+.badge-tier-tag {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #facc15;
+  letter-spacing: 0.05em;
+}
+
+.champion-badge-card.diamond .badge-tier-tag {
+  color: #38bdf8;
+}
+
+.badge-tournament-title {
+  margin: 2px 0 4px 0;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.badge-game-id {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.badge-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.7rem;
+  color: #64748b;
+}
+
+.badge-sbt-pill {
+  background: rgba(168, 85, 247, 0.15);
+  border: 1px solid rgba(168, 85, 247, 0.4);
+  color: #c084fc;
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-weight: 600;
+}
