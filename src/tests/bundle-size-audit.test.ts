@@ -16,3 +16,4 @@ describe('Bundle Size Audit Logic', () => {
     expect(checkChunkBudget(chunk600Kb, 500)).toBe(false);
   });
 });
+

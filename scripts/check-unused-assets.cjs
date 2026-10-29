@@ -13,3 +13,4 @@ if (!fs.existsSync(publicDir)) {
 const assets = fs.readdirSync(publicDir);
 console.log(`Audited ${assets.length} public static assets.`);
 console.log('✅ Unused asset check passed cleanly.');
+

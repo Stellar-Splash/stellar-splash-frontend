@@ -2,3 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /api/
 Sitemap: https://stellar-splash.org/sitemap.xml
+

@@ -21,3 +21,4 @@ try {
   console.error('\n❌ Pipeline check failed:', err.message);
   process.exit(1);
 }
+

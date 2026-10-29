@@ -15,7 +15,13 @@
     "precommit": "npm run typecheck && npm test",
     "prepare": "git config core.hooksPath .githooks || true",
     "verify:all": "node scripts/verify-all.cjs",
-    "analyze": "node scripts/analyze-bundle.cjs"
+    "analyze": "node scripts/analyze-bundle.cjs",
+    "audit:bundle": "node scripts/bundle-size-audit.cjs",
+    "audit:a11y": "node scripts/check-accessibility.cjs",
+    "verify:links": "node scripts/verify-stellar-expert-links.cjs",
+    "verify:pipeline": "node scripts/verify-frontend-pipeline.cjs",
+    "audit:unused": "node scripts/check-unused-assets.cjs",
+    "audit:deps": "node scripts/audit-frontend-deps.cjs"
   },
   "engines": {
     "node": ">=18.0.0",

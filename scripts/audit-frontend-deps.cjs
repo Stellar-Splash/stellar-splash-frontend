@@ -10,3 +10,4 @@ try {
   console.warn('⚠️ Review npm audit report.');
   process.exit(0);
 }
+

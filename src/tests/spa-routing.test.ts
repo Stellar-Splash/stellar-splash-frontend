@@ -60,3 +60,4 @@ describe('SPA Route Pattern Matcher', () => {
     expect(res.view).toBe('not-found');
   });
 });
+

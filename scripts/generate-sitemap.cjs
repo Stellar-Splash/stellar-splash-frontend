@@ -31,3 +31,4 @@ const outPath = path.join(__dirname, '..', 'public', 'sitemap.xml');
 fs.writeFileSync(outPath, sitemapXml, 'utf8');
 
 console.log(`✅ Sitemap written to ${outPath}`);
+

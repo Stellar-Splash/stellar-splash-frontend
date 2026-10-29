@@ -30,3 +30,4 @@ describe('StellarExpert Explorer Link Generator', () => {
     expect(url).toBe(`https://stellar.expert/explorer/public/tx/${testTx}`);
   });
 });
+

@@ -48,3 +48,4 @@ if (maxGzipKb > 500) {
 }
 
 console.log('✅ Bundle chunk sizes within acceptable performance thresholds (< 500 KB).');
+

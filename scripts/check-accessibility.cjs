@@ -23,3 +23,4 @@ files.forEach((file) => {
 
 console.log(`Audited ${totalAudited} UI components. Accessible markers detected in ${passCount}/${totalAudited} files.`);
 console.log('✅ Accessibility check completed.');
+

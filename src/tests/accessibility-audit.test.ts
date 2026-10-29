@@ -20,3 +20,4 @@ describe('Accessibility Compliance Validator', () => {
     expect(isElementAccessible(unlabelled)).toBe(false);
   });
 });
+
