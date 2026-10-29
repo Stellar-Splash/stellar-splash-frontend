@@ -52,3 +52,4 @@ export const LiveContractEventTicker: React.FC = () => {
     </div>
   );
 };
+

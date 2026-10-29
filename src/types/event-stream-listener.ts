@@ -8,3 +8,4 @@ export interface LiveContractEvent {
 }
 
 export type ContractEventCallback = (event: LiveContractEvent) => void;
+

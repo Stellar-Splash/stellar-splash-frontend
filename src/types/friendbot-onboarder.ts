@@ -4,3 +4,4 @@ export interface FriendbotFundingState {
   error?: string;
   lastFundedAt?: number;
 }
+

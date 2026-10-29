@@ -8,3 +8,4 @@ export interface ChampionBadge {
   tier: 'Gold' | 'Diamond' | 'Champion';
   issuerContract: string;
 }
+

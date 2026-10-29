@@ -23,3 +23,4 @@ export interface WalletAdapterEvents {
   onDisconnect?: () => void;
   onError?: (error: Error) => void;
 }
+

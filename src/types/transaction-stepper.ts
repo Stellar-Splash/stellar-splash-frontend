@@ -8,3 +8,4 @@ export interface TransactionStepperState {
   startedAt: number;
   completedAt?: number;
 }
+

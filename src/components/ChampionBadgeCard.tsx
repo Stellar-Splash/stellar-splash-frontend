@@ -37,3 +37,4 @@ export const ChampionBadgeCard: React.FC<ChampionBadgeCardProps> = ({ badge }) =
     </div>
   );
 };
+

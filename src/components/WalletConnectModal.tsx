@@ -85,3 +85,4 @@ export const WalletConnectModal: React.FC<WalletConnectModalProps> = ({
     </div>
   );
 };
+

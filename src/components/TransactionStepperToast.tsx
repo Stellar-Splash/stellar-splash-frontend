@@ -88,3 +88,4 @@ export const TransactionStepperToast: React.FC<TransactionStepperToastProps> = (
     </div>
   );
 };
+

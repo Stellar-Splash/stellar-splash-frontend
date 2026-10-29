@@ -47,3 +47,4 @@ describe('StellarWalletAdapterService', () => {
     expect(adapter.getState().publicKey).toBeUndefined();
   });
 });
+

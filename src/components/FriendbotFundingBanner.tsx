@@ -60,3 +60,4 @@ export const FriendbotFundingBanner: React.FC<FriendbotFundingBannerProps> = ({
     </div>
   );
 };
+
