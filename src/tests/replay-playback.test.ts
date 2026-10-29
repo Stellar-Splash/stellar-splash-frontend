@@ -51,3 +51,4 @@ describe('ReplayPlaybackService', () => {
     expect(service.getState().playbackSpeed).toBe(2.0);
   });
 });
+

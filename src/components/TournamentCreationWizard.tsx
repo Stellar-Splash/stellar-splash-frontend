@@ -162,3 +162,4 @@ export const TournamentCreationWizard: React.FC<TournamentCreationWizardProps> =
     </div>
   );
 };
+

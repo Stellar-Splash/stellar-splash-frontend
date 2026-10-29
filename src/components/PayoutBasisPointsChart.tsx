@@ -62,3 +62,4 @@ export const PayoutBasisPointsChart: React.FC<PayoutBasisPointsChartProps> = ({ 
     </div>
   );
 };
+

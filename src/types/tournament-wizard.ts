@@ -10,3 +10,4 @@ export interface TournamentCreationFormData {
 }
 
 export type WizardStep = 1 | 2 | 3;
+

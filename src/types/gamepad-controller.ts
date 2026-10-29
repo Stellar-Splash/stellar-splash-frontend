@@ -6,3 +6,4 @@ export interface VirtualJoystickVector {
 }
 
 export type ActionButtonType = 'jump' | 'boost' | 'interact';
+

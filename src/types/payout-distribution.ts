@@ -9,3 +9,4 @@ export interface PayoutDistributionModel {
   totalPrizePoolXlm: number;
   tiers: PayoutTier[];
 }
+

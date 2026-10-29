@@ -85,3 +85,4 @@ export const InteractiveReplayScrubber: React.FC<InteractiveReplayScrubberProps>
     </div>
   );
 };
+
