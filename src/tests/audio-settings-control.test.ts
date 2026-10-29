@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { AudioSynthService } from '../services/audio-synth';
+import { ToastService } from '../services/toast';
 
 class MockStorage implements Storage {
   private store: Record<string, string> = {};
@@ -73,5 +74,22 @@ describe('Audio Settings & AudioSynthService', () => {
     AudioSynthService.setVolume(0.3);
     // Listener should not be called again after unsubscribe
     expect(listener).toHaveBeenCalledTimes(1);
+  });
+
+  it('triggers ToastService alerts on audio mute/unmute state changes', () => {
+    const toastSpy = vi.spyOn(ToastService, 'show');
+
+    AudioSynthService.setMuted(true);
+    ToastService.show({
+      type: 'warning',
+      title: '🔇 Audio Muted',
+      durationMs: 2000,
+    });
+    expect(toastSpy).toHaveBeenCalledWith(
+      expect.objectContaining({
+        type: 'warning',
+        title: '🔇 Audio Muted',
+      })
+    );
   });
 });

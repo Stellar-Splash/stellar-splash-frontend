@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Volume2, VolumeX, Sliders, Bell } from 'lucide-react';
 import { AudioSynthService } from '../services/audio-synth';
+import { ToastService } from '../services/toast';
 
 export const AudioSettingsControl: React.FC = () => {
   const [muted, setMuted] = useState<boolean>(AudioSynthService.isMuted());
@@ -15,7 +16,7 @@ export const AudioSettingsControl: React.FC = () => {
       setVolume(vol);
     });
 
-    // Global keyboard shortcut 'M' to toggle mute
+    // Global keyboard shortcut 'M' to toggle mute with HUD toast feedback
     const handleKeyDown = (e: KeyboardEvent) => {
       const activeTag = document.activeElement?.tagName.toLowerCase();
       if (activeTag === 'input' || activeTag === 'textarea' || (document.activeElement as HTMLElement)?.isContentEditable) {
@@ -23,7 +24,15 @@ export const AudioSettingsControl: React.FC = () => {
       }
       if (e.key === 'm' || e.key === 'M') {
         e.preventDefault();
-        AudioSynthService.toggleMuted();
+        const nextMuted = !AudioSynthService.isMuted();
+        AudioSynthService.setMuted(nextMuted);
+        const currentVol = Math.round(AudioSynthService.getVolume() * 100);
+        ToastService.show({
+          type: nextMuted ? 'warning' : 'info',
+          title: nextMuted ? '🔇 Audio Muted' : `🔊 Audio Active (${currentVol}%)`,
+          message: 'Shortcut: Press [M] to toggle procedural audio synth',
+          durationMs: 2000,
+        });
       }
     };
 
@@ -54,7 +63,15 @@ export const AudioSettingsControl: React.FC = () => {
   };
 
   const handleToggleMute = () => {
-    AudioSynthService.toggleMuted();
+    const nextMuted = !AudioSynthService.isMuted();
+    AudioSynthService.setMuted(nextMuted);
+    const currentVol = Math.round(AudioSynthService.getVolume() * 100);
+    ToastService.show({
+      type: nextMuted ? 'warning' : 'info',
+      title: nextMuted ? '🔇 Audio Muted' : `🔊 Audio Active (${currentVol}%)`,
+      message: 'Shortcut: Press [M] to toggle procedural audio synth',
+      durationMs: 2000,
+    });
   };
 
   const handleTestChime = () => {
