@@ -1,0 +1,178 @@
+.solvency-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(8, 12, 28, 0.85);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 16px;
+}
+
+.solvency-modal-card {
+  background: #0d1326;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  border-radius: 16px;
+  width: 100%;
+  max-width: 520px;
+  padding: 24px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+  color: #f8fafc;
+}
+
+.solvency-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 8px;
+}
+
+.solvency-title-group h3 {
+  margin: 6px 0 0 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.solvency-grade-badge {
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 6px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.solvency-grade-badge.aaa,
+.solvency-grade-badge.aa,
+.solvency-grade-badge.a {
+  background: rgba(34, 197, 94, 0.2);
+  border: 1px solid rgba(34, 197, 94, 0.4);
+  color: #4ade80;
+}
+
+.solvency-grade-badge.deficit {
+  background: rgba(239, 68, 68, 0.2);
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  color: #f87171;
+}
+
+.solvency-close-btn {
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  color: #94a3b8;
+  cursor: pointer;
+}
+
+.solvency-close-btn:hover {
+  color: #ffffff;
+}
+
+.solvency-modal-subtitle {
+  font-size: 0.85rem;
+  color: #94a3b8;
+  line-height: 1.4;
+  margin: 0 0 20px 0;
+}
+
+.solvency-gauge-card {
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgba(56, 189, 248, 0.2);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 18px;
+}
+
+.gauge-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  color: #cbd5e1;
+  margin-bottom: 8px;
+}
+
+.gauge-percent {
+  color: #38bdf8;
+  font-size: 1rem;
+}
+
+.gauge-track {
+  height: 8px;
+  background: #1e293b;
+  border-radius: 9999px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.gauge-bar {
+  height: 100%;
+  border-radius: 9999px;
+  transition: width 0.4s ease;
+}
+
+.gauge-bar.aaa,
+.gauge-bar.aa,
+.gauge-bar.a {
+  background: linear-gradient(90deg, #22c55e, #38bdf8);
+}
+
+.gauge-bar.deficit {
+  background: #ef4444;
+}
+
+.gauge-footnote {
+  font-size: 0.72rem;
+  color: #94a3b8;
+}
+
+.solvency-breakdown-table {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: rgba(30, 41, 59, 0.4);
+  border-radius: 10px;
+  padding: 12px 16px;
+  margin-bottom: 20px;
+}
+
+.breakdown-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  color: #94a3b8;
+}
+
+.breakdown-row strong {
+  color: #ffffff;
+}
+
+.breakdown-row.highlight {
+  border-top: 1px solid rgba(51, 65, 85, 0.6);
+  padding-top: 8px;
+  margin-top: 4px;
+}
+
+.breakdown-row strong.positive {
+  color: #4ade80;
+}
+
+.breakdown-row strong.negative {
+  color: #f87171;
+}
+
+.solvency-modal-footer {
+  text-align: center;
+}
+
+.solvency-explorer-link {
+  color: #38bdf8;
+  font-size: 0.85rem;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.solvency-explorer-link:hover {
+  text-decoration: underline;
+}
