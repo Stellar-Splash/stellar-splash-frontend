@@ -289,4 +289,34 @@ export class AudioSynthService {
       osc.stop(now + idx * 0.1 + 0.3);
     });
   }
+
+  /**
+   * Subtle pleasant two-tone chime for incoming live event notifications.
+   */
+  public static playNotification(): void {
+    if (this.muted) return;
+    const ctx = this.getContext();
+    if (!ctx) return;
+
+    const notes = [587.33, 880.0]; // D5 -> A5
+    const now = ctx.currentTime;
+
+    notes.forEach((freq, idx) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, now + idx * 0.08);
+
+      const vol = this.masterVolume * 0.25;
+      gain.gain.setValueAtTime(vol, now + idx * 0.08);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.08 + 0.2);
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      osc.start(now + idx * 0.08);
+      osc.stop(now + idx * 0.08 + 0.2);
+    });
+  }
 }
