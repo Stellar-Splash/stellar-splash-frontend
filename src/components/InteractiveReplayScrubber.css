@@ -1,0 +1,148 @@
+.replay-scrubber-card {
+  background: #0f172a;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  border-radius: 12px;
+  padding: 14px 18px;
+  margin: 12px 0;
+  color: #f8fafc;
+}
+
+.scrubber-timeline-container {
+  position: relative;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.scrubber-range-slider {
+  width: 100%;
+  height: 6px;
+  background: #1e293b;
+  border-radius: 9999px;
+  outline: none;
+  cursor: pointer;
+  -webkit-appearance: none;
+  z-index: 2;
+  position: relative;
+}
+
+.scrubber-range-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #38bdf8;
+  box-shadow: 0 0 10px #38bdf8;
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+
+.scrubber-range-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+}
+
+.scrubber-progress-fill {
+  position: absolute;
+  left: 0;
+  top: 9px;
+  height: 6px;
+  background: #0284c7;
+  border-radius: 9999px;
+  pointer-events: none;
+}
+
+.scrubber-marker {
+  position: absolute;
+  top: 4px;
+  width: 4px;
+  height: 16px;
+  border-radius: 2px;
+  transform: translateX(-50%);
+  z-index: 3;
+  pointer-events: auto;
+}
+
+.scrubber-marker.score {
+  background: #22c55e;
+  box-shadow: 0 0 6px #22c55e;
+}
+
+.scrubber-marker.anomaly {
+  background: #ef4444;
+  box-shadow: 0 0 6px #ef4444;
+}
+
+.scrubber-controls-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.scrubber-left-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.scrubber-btn {
+  background: rgba(30, 41, 59, 0.8);
+  border: 1px solid rgba(71, 85, 105, 0.5);
+  color: #cbd5e1;
+  padding: 4px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.scrubber-btn:hover {
+  background: rgba(51, 65, 85, 0.9);
+  color: #ffffff;
+}
+
+.scrubber-play-btn {
+  background: #0284c7;
+  border: none;
+  color: #ffffff;
+  padding: 5px 14px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.scrubber-play-btn:hover {
+  background: #0369a1;
+}
+
+.scrubber-tick-counter {
+  font-size: 0.8rem;
+  color: #94a3b8;
+  margin-left: 8px;
+}
+
+.scrubber-tick-counter strong {
+  color: #38bdf8;
+}
+
+.scrubber-speed-selector {
+  display: flex;
+  gap: 6px;
+}
+
+.speed-chip {
+  background: rgba(30, 41, 59, 0.8);
+  border: 1px solid rgba(71, 85, 105, 0.4);
+  color: #94a3b8;
+  font-size: 0.75rem;
+  padding: 3px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.speed-chip.active {
+  background: rgba(56, 189, 248, 0.2);
+  border-color: #38bdf8;
+  color: #38bdf8;
+  font-weight: 600;
+}
