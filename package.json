@@ -9,7 +9,9 @@
     "preview": "vite preview",
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
-    "lint": "tsc --noEmit"
+    "lint": "tsc --noEmit",
+    "format:check": "npx prettier --check \"src/**/*.{ts,tsx,css,json}\"",
+    "format": "npx prettier --write \"src/**/*.{ts,tsx,css,json}\""
   },
   "engines": {
     "node": ">=18.0.0",
