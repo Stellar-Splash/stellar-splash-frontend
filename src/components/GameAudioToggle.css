@@ -1,0 +1,36 @@
+.game-audio-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  border-radius: 8px;
+  padding: 6px 12px;
+  color: #f8fafc;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.game-audio-toggle:hover {
+  border-color: #38bdf8;
+  background: rgba(56, 189, 248, 0.15);
+}
+
+.game-audio-toggle.muted {
+  border-color: rgba(239, 68, 68, 0.4);
+  color: #94a3b8;
+}
+
+.game-audio-toggle.muted:hover {
+  border-color: #ef4444;
+}
+
+.audio-icon {
+  font-size: 1rem;
+}
+
+.audio-status-label {
+  letter-spacing: 0.02em;
+}
