@@ -17,6 +17,7 @@ import { NetworkStatusBar } from './components/NetworkStatusBar';
 import { ToastContainer } from './components/ToastContainer';
 import { ApiClient, TournamentItem } from './services/api';
 import { StellarWalletService, WalletState } from './services/stellar-wallet';
+import { isEscapeKey } from './utils/accessibility';
 
 export const App: React.FC = () => {
   const [wallet, setWallet] = useState<WalletState>(StellarWalletService.loadSavedWallet());
@@ -63,6 +64,35 @@ export const App: React.FC = () => {
       // ignore
     }
   }, []);
+
+  // Global Keyboard Accessibility: close any open modal on Escape
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (isEscapeKey(e)) {
+        if (showCreateModal) setShowCreateModal(false);
+        else if (showFundingModal) setShowFundingModal(false);
+        else if (showLeaderboardModal) setShowLeaderboardModal(false);
+        else if (showFinancialModal) setShowFinancialModal(false);
+        else if (showAgreementModal) setShowAgreementModal(false);
+        else if (showRankingsModal) setShowRankingsModal(false);
+        else if (showSettlementModal) setShowSettlementModal(false);
+        else if (showPlayerPayoutsModal) setShowPlayerPayoutsModal(false);
+        else if (showVerificationModal) setShowVerificationModal(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [
+    showCreateModal,
+    showFundingModal,
+    showLeaderboardModal,
+    showFinancialModal,
+    showAgreementModal,
+    showRankingsModal,
+    showSettlementModal,
+    showPlayerPayoutsModal,
+    showVerificationModal,
+  ]);
 
   // Handlers for tournament interactions
   const handlePlayTournament = async (t: TournamentItem) => {
