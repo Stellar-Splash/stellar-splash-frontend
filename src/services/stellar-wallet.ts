@@ -233,8 +233,17 @@ export class StellarWalletService {
 
     const sourceAccount = await server.loadAccount(sourcePub);
 
+    let baseFee = '100';
+    try {
+      const feeStats = await server.feeStats();
+      const modeFee = feeStats?.max_fee?.mode ? Number(feeStats.max_fee.mode) : 100;
+      baseFee = Math.max(100, isNaN(modeFee) ? 100 : modeFee).toString();
+    } catch {
+      // Graceful fallback to default base fee
+    }
+
     const tx = new TransactionBuilder(sourceAccount, {
-      fee: '100',
+      fee: baseFee,
       networkPassphrase: Networks.TESTNET,
     })
       .addOperation(

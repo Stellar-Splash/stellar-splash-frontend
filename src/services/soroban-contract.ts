@@ -78,8 +78,18 @@ export class SorobanContractService {
     networkPassphrase = Networks.TESTNET
   ): Promise<string> {
     const account = await server.loadAccount(sourceAddress);
+
+    let baseFee = '1000';
+    try {
+      const feeStats = await server.feeStats();
+      const modeFee = feeStats?.max_fee?.mode ? Number(feeStats.max_fee.mode) : 100;
+      baseFee = Math.max(1000, isNaN(modeFee) ? 1000 : modeFee * 10).toString();
+    } catch {
+      // Graceful fallback to standard Soroban base fee
+    }
+
     const tx = new TransactionBuilder(account, {
-      fee: '1000',
+      fee: baseFee,
       networkPassphrase,
     })
       .addOperation(operation)
