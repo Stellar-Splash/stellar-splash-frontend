@@ -48,9 +48,10 @@ export const PrizePoolFundingModal: React.FC<PrizePoolFundingModalProps> = ({
     setStep('SIMULATING');
     try {
       const amountStroops = BigInt(Math.round(tournament.prizePoolAmount * 10_000_000));
+      const numericTournamentId = parseInt(tournament.id.replace(/\D/g, '') || '1', 10);
       const op = SorobanContractService.buildFundPrizePoolOp(
         wallet.publicKey,
-        1, // tournament identifier
+        numericTournamentId,
         amountStroops
       );
       const est = await SorobanContractService.estimateInvocation(wallet.publicKey, op);
@@ -90,9 +91,10 @@ export const PrizePoolFundingModal: React.FC<PrizePoolFundingModalProps> = ({
         confirmedTxHash = txResult.txHash;
       } else {
         const amountStroops = BigInt(Math.round(tournament.prizePoolAmount * 10_000_000));
+        const numericTournamentId = parseInt(tournament.id.replace(/\D/g, '') || '1', 10);
         const op = SorobanContractService.buildFundPrizePoolOp(
           wallet.publicKey,
-          1,
+          numericTournamentId,
           amountStroops
         );
         const invocationRes = await SorobanContractService.executeContractCall(

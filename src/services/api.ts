@@ -741,8 +741,7 @@ export class ApiClient {
   }
 
   public static async executeSettlement(
-    tournamentId: string,
-    vaultSecretKey?: string
+    tournamentId: string
   ): Promise<{
     success: boolean;
     settlement?: SettlementRecord;
@@ -753,7 +752,6 @@ export class ApiClient {
       const res = await fetch(`${API_BASE}/settlements/${tournamentId}/execute`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ vaultSecretKey }),
       });
       return await res.json();
     } catch (err) {

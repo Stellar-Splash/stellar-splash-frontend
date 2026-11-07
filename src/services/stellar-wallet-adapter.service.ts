@@ -119,7 +119,7 @@ export class StellarWalletAdapterService {
       isConnected: false,
       network: 'TESTNET',
     };
-    if (typeof localStorage !== 'undefined') {
+    if (typeof localStorage !== 'undefined' && typeof localStorage.removeItem === 'function') {
       localStorage.removeItem('stellar_splash_wallet_session');
     }
   }
@@ -129,13 +129,13 @@ export class StellarWalletAdapterService {
   }
 
   private persistSession(): void {
-    if (typeof localStorage !== 'undefined') {
+    if (typeof localStorage !== 'undefined' && typeof localStorage.setItem === 'function') {
       localStorage.setItem('stellar_splash_wallet_session', JSON.stringify(this.state));
     }
   }
 
   public restoreSession(): ConnectedWalletState | null {
-    if (typeof localStorage !== 'undefined') {
+    if (typeof localStorage !== 'undefined' && typeof localStorage.getItem === 'function') {
       const saved = localStorage.getItem('stellar_splash_wallet_session');
       if (saved) {
         try {
