@@ -257,7 +257,25 @@ export interface PlayerPayoutItem {
   tournament: TournamentItem;
 }
 
-const API_BASE = '/api';
+const API_BASE =
+  typeof import.meta !== 'undefined' && (import.meta as any).env?.VITE_API_URL
+    ? String((import.meta as any).env.VITE_API_URL).replace(/\/+$/, '')
+    : '/api';
+
+async function parseJsonSafely(res: any): Promise<any> {
+  try {
+    if (res.headers && typeof res.headers.get === 'function') {
+      const ct = res.headers.get('content-type');
+      if (ct && ct.includes('text/html')) return null;
+    }
+    if (typeof res.json === 'function') {
+      return await res.json();
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
 export const TOURNAMENTS_CACHE_KEY = 'stellar_splash_tournaments_cache_v1';
 export const DEFAULT_TOURNAMENTS_CACHE_TTL_MS = 60_000; // 60 seconds
 
@@ -331,8 +349,8 @@ export class ApiClient {
     const fetchFresh = async (): Promise<TournamentItem[] | null> => {
       try {
         const res = await fetch(`${API_BASE}/tournaments`);
-        const data = await res.json();
-        if (data.success && Array.isArray(data.tournaments)) {
+        const data = await parseJsonSafely(res);
+        if (data && data.success && Array.isArray(data.tournaments)) {
           setCachedTournaments(data.tournaments, options?.ttlMs ?? DEFAULT_TOURNAMENTS_CACHE_TTL_MS);
           return data.tournaments;
         }
@@ -394,7 +412,8 @@ export class ApiClient {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(params),
       });
-      return await res.json();
+      const data = await parseJsonSafely(res);
+      return data ?? { success: false, error: 'Backend API unavailable' };
     } catch (err) {
       return { success: false, error: String(err) };
     }
@@ -410,7 +429,8 @@ export class ApiClient {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ playerWallet }),
       });
-      return await res.json();
+      const data = await parseJsonSafely(res);
+      return data ?? { success: false, error: 'Backend API unavailable' };
     } catch (err) {
       return { success: false, error: String(err) };
     }
@@ -421,8 +441,8 @@ export class ApiClient {
   ): Promise<{ leaderboard: LeaderboardEntry[]; tournamentName?: string }> {
     try {
       const res = await fetch(`${API_BASE}/tournaments/${tournamentId}/leaderboard`);
-      const data = await res.json();
-      if (data.success) {
+      const data = await parseJsonSafely(res);
+      if (data && data.success) {
         return { leaderboard: data.leaderboard, tournamentName: data.tournamentName };
       }
     } catch {
@@ -452,7 +472,8 @@ export class ApiClient {
   public static async getPrizePool(tournamentId: string): Promise<any> {
     try {
       const res = await fetch(`${API_BASE}/tournaments/${tournamentId}/prize-pool`);
-      return await res.json();
+      const data = await parseJsonSafely(res);
+      return data ?? { success: false, error: 'Backend API unavailable' };
     } catch (err) {
       return { success: false, error: String(err) };
     }
@@ -476,7 +497,8 @@ export class ApiClient {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ txHash, funderWallet }),
       });
-      return await res.json();
+      const data = await parseJsonSafely(res);
+      return data ?? { success: false, error: 'Backend API unavailable' };
     } catch (err) {
       return { success: false, error: String(err) };
     }
@@ -492,7 +514,8 @@ export class ApiClient {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ tournamentId, playerWallet, gameId: 'splash-rush' }),
       });
-      return await res.json();
+      const data = await parseJsonSafely(res);
+      return data ?? { success: false, error: 'Backend API unavailable' };
     } catch (err) {
       return { success: false, error: String(err) };
     }
@@ -510,7 +533,8 @@ export class ApiClient {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(params),
       });
-      return await res.json();
+      const data = await parseJsonSafely(res);
+      return data ?? { success: false, error: 'Backend API unavailable' };
     } catch (err) {
       return { success: false, error: String(err) };
     }
@@ -525,7 +549,8 @@ export class ApiClient {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
       });
-      return await res.json();
+      const data = await parseJsonSafely(res);
+      return data ?? { success: false, error: 'Backend API unavailable' };
     } catch (err) {
       return { success: false, error: String(err) };
     }
@@ -536,7 +561,8 @@ export class ApiClient {
   ): Promise<{ success: boolean; verification?: ResultVerification; error?: string }> {
     try {
       const res = await fetch(`${API_BASE}/verification/match/${matchId}`);
-      return await res.json();
+      const data = await parseJsonSafely(res);
+      return data ?? { success: false, error: 'Backend API unavailable' };
     } catch (err) {
       return { success: false, error: String(err) };
     }
@@ -548,7 +574,8 @@ export class ApiClient {
   ): Promise<{ success: boolean; finalized: boolean; ranking: FinalRankingRecord; error?: string }> {
     try {
       const res = await fetch(`${API_BASE}/rankings/${tournamentId}`);
-      return await res.json();
+      const data = await parseJsonSafely(res);
+      return data ?? { success: false, error: 'Backend API unavailable' };
     } catch (err) {
       return {
         success: true,
@@ -585,7 +612,8 @@ export class ApiClient {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ finalizedBy }),
       });
-      return await res.json();
+      const data = await parseJsonSafely(res);
+      return data ?? { success: false, error: 'Backend API unavailable' };
     } catch (err) {
       return { success: false, error: String(err) };
     }
@@ -597,7 +625,8 @@ export class ApiClient {
   ): Promise<{ success: boolean; agreements: PrizeAgreement[]; error?: string }> {
     try {
       const res = await fetch(`${API_BASE}/agreements/${tournamentId}`);
-      return await res.json();
+      const data = await parseJsonSafely(res);
+      return data ?? { success: false, error: 'Backend API unavailable' };
     } catch (err) {
       return {
         success: true,
@@ -635,7 +664,8 @@ export class ApiClient {
   ): Promise<{ success: boolean; agreement?: PrizeAgreement; error?: string }> {
     try {
       const res = await fetch(`${API_BASE}/agreements/${tournamentId}/active`);
-      return await res.json();
+      const data = await parseJsonSafely(res);
+      return data ?? { success: false, error: 'Backend API unavailable' };
     } catch (err) {
       return { success: false, error: String(err) };
     }
@@ -655,7 +685,8 @@ export class ApiClient {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(params),
       });
-      return await res.json();
+      const data = await parseJsonSafely(res);
+      return data ?? { success: false, error: 'Backend API unavailable' };
     } catch (err) {
       return { success: false, error: String(err) };
     }
@@ -672,7 +703,8 @@ export class ApiClient {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ approverWallet }),
       });
-      return await res.json();
+      const data = await parseJsonSafely(res);
+      return data ?? { success: false, error: 'Backend API unavailable' };
     } catch (err) {
       return { success: false, error: String(err) };
     }
@@ -689,7 +721,8 @@ export class ApiClient {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ actorWallet }),
       });
-      return await res.json();
+      const data = await parseJsonSafely(res);
+      return data ?? { success: false, error: 'Backend API unavailable' };
     } catch (err) {
       return { success: false, error: String(err) };
     }
@@ -701,7 +734,8 @@ export class ApiClient {
   ): Promise<{ success: boolean; eligibility?: SettlementEligibilityResult; error?: string }> {
     try {
       const res = await fetch(`${API_BASE}/settlements/${tournamentId}/eligibility`);
-      return await res.json();
+      const data = await parseJsonSafely(res);
+      return data ?? { success: false, error: 'Backend API unavailable' };
     } catch (err) {
       return { success: false, error: String(err) };
     }
@@ -718,7 +752,8 @@ export class ApiClient {
   }> {
     try {
       const res = await fetch(`${API_BASE}/settlements/${tournamentId}/preview`);
-      return await res.json();
+      const data = await parseJsonSafely(res);
+      return data ?? { success: false, error: 'Backend API unavailable' };
     } catch (err) {
       return { success: false, error: String(err) };
     }
@@ -734,7 +769,8 @@ export class ApiClient {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ authorizedBy }),
       });
-      return await res.json();
+      const data = await parseJsonSafely(res);
+      return data ?? { success: false, error: 'Backend API unavailable' };
     } catch (err) {
       return { success: false, error: String(err) };
     }
@@ -753,7 +789,8 @@ export class ApiClient {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
       });
-      return await res.json();
+      const data = await parseJsonSafely(res);
+      return data ?? { success: false, error: 'Backend API unavailable' };
     } catch (err) {
       return { success: false, error: String(err) };
     }
@@ -770,7 +807,8 @@ export class ApiClient {
   }> {
     try {
       const res = await fetch(`${API_BASE}/settlements/${tournamentId}`);
-      return await res.json();
+      const data = await parseJsonSafely(res);
+      return data ?? { success: false, error: 'Backend API unavailable' };
     } catch (err) {
       return { success: false, error: String(err) };
     }
@@ -783,7 +821,8 @@ export class ApiClient {
       const res = await fetch(`${API_BASE}/settlements/${settlementId}/reconcile`, {
         method: 'POST',
       });
-      return await res.json();
+      const data = await parseJsonSafely(res);
+      return data ?? { success: false, error: 'Backend API unavailable' };
     } catch (err) {
       return { success: false, error: String(err) };
     }
@@ -794,7 +833,8 @@ export class ApiClient {
   ): Promise<{ success: boolean; count?: number; payouts?: PlayerPayoutItem[]; error?: string }> {
     try {
       const res = await fetch(`${API_BASE}/settlements/player/${playerWallet}`);
-      return await res.json();
+      const data = await parseJsonSafely(res);
+      return data ?? { success: false, error: 'Backend API unavailable' };
     } catch (err) {
       return { success: false, error: String(err) };
     }
